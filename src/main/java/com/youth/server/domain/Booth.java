@@ -7,11 +7,12 @@ import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 
+import java.util.Set;
+
 /**
  * 부스 정보
  */
 @Entity
-@Table(name = "Booths")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,4 +35,10 @@ public class Booth {
     public enum Category {
         먹거리, 체험, 플리마켓, 티켓, 굿즈, 기타
     }
+
+    @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Item> items;
+
+    @OneToMany(mappedBy = "participatingBooths")
+    private Set<Festival> festivals;
 }

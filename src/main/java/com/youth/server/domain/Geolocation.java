@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
  * 위치 정보
  */
 @Entity
-@Table(name = "Geolocations")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -8,12 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 댓글 정보
  */
 @Entity
-@Table(name = "Comments")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,9 +37,9 @@ public class Comment {
     private int userId; // 작성자 아이디
 
     @NonNull
-    @Column(nullable = false, columnDefinition = "boolean default false")
-    private boolean isChild; // 댓글 여부
+    @Column(nullable = false)
 
-    @Column(nullable = true)
-    private Integer parentId; // 부모 Comment 아이디
+    @ManyToMany(mappedBy = "likedComments")
+    private List<User> likedByUsers; // 좋아요를 누른 사용자들
+
 }

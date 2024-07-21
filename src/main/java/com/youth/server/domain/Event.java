@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
  * 사용자 알람용 이벤트
  */
 @Entity
-@Table(name = "Events")
 @Getter
 @Setter
 @NoArgsConstructor

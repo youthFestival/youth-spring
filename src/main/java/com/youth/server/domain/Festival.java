@@ -8,12 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * 행사 정보
  */
 @Entity
-@Table(name = "Festivals")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -85,4 +85,29 @@ public class Festival {
     public enum Category {
         대학축제, 페스티벌
     }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "FestivalArtist",
+        joinColumns = @JoinColumn(name = "festivalId"),
+        inverseJoinColumns = @JoinColumn(name = "artistId")
+    )
+    private Set<Artist> participatingArtists; // 축제에 참여하는 아티스트들
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "FestivalBooth",
+            joinColumns = @JoinColumn(name = "festivalId"),
+            inverseJoinColumns = @JoinColumn(name = "boothId")
+    )
+    private Set<Artist> participatingBooths; // 축제에 참여하는 부스들
+
+    @ManyToMany(fetch = FetchType.LAZY , mappedBy = "favoriteFestivals")
+    private Set<User> favoriteUsers; // 좋아요 누른 사용자들
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "univercityId", nullable = true)
+    private University university;
+
+
 }

@@ -7,7 +7,6 @@ import lombok.*;
  * 사진 목록
  */
 @Entity
-@Table(name = "Images")
 @Getter
 @Setter
 @NoArgsConstructor

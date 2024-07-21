@@ -7,11 +7,12 @@ import lombok.Setter;
 import lombok.RequiredArgsConstructor;
 import lombok.NonNull;
 
+import java.util.Set;
+
 /**
  * 대학 정보
  */
 @Entity
-@Table(name = "Universities")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,11 +30,12 @@ public class University {
     @Column(length = 50, nullable = true)
     private String campus; // 대학 캠퍼스
 
-    @NonNull
     @Column(nullable = false)
     private int geoLocationId; // 위치 (외래 키)
 
-    @NonNull
     @Column(nullable = false)
     private int logoId; // 대학교 로고 (외래 키)
+
+    @OneToMany(mappedBy = "university", fetch = FetchType.LAZY)
+    private Set<Festival> festivals; // 대학 축제 목록
 }

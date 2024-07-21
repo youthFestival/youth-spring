@@ -1,16 +1,13 @@
 package com.youth.server.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.RequiredArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name = "Users", uniqueConstraints = {
+@Table(uniqueConstraints = {
         @UniqueConstraint(columnNames = "userId"),
         @UniqueConstraint(columnNames = "email")
 })
@@ -18,6 +15,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
@@ -37,8 +36,9 @@ public class User {
     private String email;
 
     @NonNull
+    @Builder.Default
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @NonNull
     @Enumerated(EnumType.STRING)
@@ -71,8 +71,29 @@ public class User {
         ADMIN, USER
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ArtistUser",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "artistId")
+    )
+    private Set<Artist> favoriteArtists; // 좋아요 누른 아티스트
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "CommentLike",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "commentId")
+    )
+    private Set<Comment> likedComments; // 좋아요 누른 댓글
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "UserFestival",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "festivalId")
+    )
+    private Set<Festival> favoriteFestivals; // 좋아요 누른 축제
 }

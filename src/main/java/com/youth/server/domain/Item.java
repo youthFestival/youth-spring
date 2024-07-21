@@ -11,7 +11,6 @@ import lombok.NonNull;
  * 아이템 정보
  */
 @Entity
-@Table(name = "Items")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,4 +30,8 @@ public class Item {
 
     @Column(length = 255, nullable = true)
     private String keyword; // 키워드(음식, 주류 등)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boothId", nullable = false)
+    private Booth booth;
 }

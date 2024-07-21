@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
  * 고객 문의
  */
 @Entity
-@Table(name = "Inquiries")
 @Getter
 @Setter
 @NoArgsConstructor

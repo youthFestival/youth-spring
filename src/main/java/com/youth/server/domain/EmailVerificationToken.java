@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
  * 이메일 인증 토큰
  */
 @Entity
-@Table(name = "EmailVerificationTokens")
 @Getter
 @Setter
 @NoArgsConstructor

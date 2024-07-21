@@ -18,11 +18,9 @@ public class FestivalsComments {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // 기본 키, 자동 증가
 
-    @NonNull
     @Column(nullable = false)
     private int festivalId; // 축제 외래 키
 
-    @NonNull
     @Column(nullable = false)
     private int commentId; // 댓글 외래 키
 
