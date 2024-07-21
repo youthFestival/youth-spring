@@ -1,4 +1,88 @@
 package com.youth.server.domain;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
+
+import java.time.LocalDateTime;
+
+/**
+ * 행사 정보
+ */
+@Entity
+@Table(name = "Festivals")
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Festival {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id; // 기본 키, 자동 증가
+
+    @NonNull
+    @Column(length = 255, nullable = false)
+    private String name; // 행사 이름
+
+    @Column(nullable = true)
+    private LocalDateTime startDate; // 축제 시작 날짜
+
+    @Column(nullable = true)
+    private LocalDateTime endDate; // 축제 종료 날짜
+
+    @Column(nullable = true)
+    private Integer geoLocationId; // 위치 (외래 키)
+
+    @Column(nullable = true)
+    private String description; // 설명
+
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "enum('대학축제', '페스티벌')")
+    private Category category; // 행사 유형
+
+    @Column(length = 255, nullable = true)
+    private String organizer; // 행사 주관하는 곳
+
+    @NonNull
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int viewCount; // 방문자 수
+
+    @Column(length = 255, nullable = true)
+    private String locality; // 행사 지역 (전라도, 경기도 등)
+
+    @Column(length = 50, nullable = true)
+    private String tel; // 행사 주관 연락처
+
+    @Column(nullable = true)
+    private Integer minAge; // 관람 연령 제한
+
+    @Column(nullable = true)
+    private Integer ticketPrice; // 티켓 가격
+
+    @Column(length = 255, nullable = true)
+    private String ticketUrl; // 티켓 예매 링크
+
+    @Column(nullable = true)
+    private LocalDateTime ticketOpen; // 티켓 판매 시작 시간
+
+    @Column(nullable = true)
+    private LocalDateTime ticketClose; // 티켓 판매 종료 시간
+
+    @Column(nullable = true)
+    private java.time.LocalTime stageOpen; // 공연 시작 시간
+
+    @Column(nullable = true)
+    private java.time.LocalTime stageClose; // 공연 마무리 시간
+
+    @Column(length = 255, nullable = true)
+    private String organizerUrl; // 행사 홈페이지
+
+    public enum Category {
+        대학축제, 페스티벌
+    }
 }

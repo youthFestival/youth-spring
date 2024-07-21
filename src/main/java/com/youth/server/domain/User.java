@@ -2,59 +2,77 @@ package com.youth.server.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.RequiredArgsConstructor;
+import lombok.NonNull;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Users")
-@Getter @Setter
+@Table(name = "Users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "userId"),
+        @UniqueConstraint(columnNames = "email")
+})
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "userId", nullable = false, length = 50)
+    @NonNull
+    @Column(nullable = false, length = 50)
     private String userId;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @NonNull
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @NonNull
+    @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(name = "createdAt", nullable = false)
-    private Timestamp createdAt;
+    @NonNull
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
+    @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false)
+    @Column(nullable = false)
     private Gender gender;
 
-    @Column(name = "username", nullable = false, length = 50)
+    @NonNull
+    @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(name = "tel", length = 50)
+    @Column(length = 50)
     private String tel;
 
-    @Column(name = "address", length = 255)
+    @Column(length = 255)
     private String address;
 
+    @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "isAdmin", nullable = false)
+    @Column(nullable = false)
     private Role isAdmin;
 
-    @Column(name = "isAllowEmail", nullable = false)
+    @Column(nullable = false)
     private boolean isAllowEmail;
-
-    public User() {
-    }
 
     public enum Gender {
         남성, 여성
     }
 
     public enum Role {
-        admin, user
+        ADMIN, USER
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 }
