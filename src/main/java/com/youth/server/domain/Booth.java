@@ -39,6 +39,6 @@ public class Booth {
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Item> items;
 
-    @OneToMany(mappedBy = "participatingBooths")
+    @ManyToMany(mappedBy = "participatingBooths")
     private Set<Festival> festivals;
 }

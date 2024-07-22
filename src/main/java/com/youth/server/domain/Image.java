@@ -3,6 +3,8 @@ package com.youth.server.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 /**
  * 사진 목록
  */
@@ -32,4 +34,7 @@ public class Image {
     public enum Category {
         행사_사진, 구조도, 포스터, 행사_정보, 부스, 기타, 대학로고, 아티스트
     }
+
+    @ManyToMany(mappedBy = "images")
+    private Set<Festival> festivals;
 }

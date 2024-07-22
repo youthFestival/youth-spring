@@ -36,7 +36,6 @@ public class Event {
     @Column(length = 255, nullable = false)
     private String redirectUrl; // 알람 이벤트 처리 링크
 
-    @NonNull
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isChecked; // 알람 확인 여부
 

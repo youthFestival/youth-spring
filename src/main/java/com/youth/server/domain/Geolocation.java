@@ -1,10 +1,7 @@
 package com.youth.server.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 /**
  * 위치 정보
@@ -13,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Geolocation {
 
     @Id

@@ -48,7 +48,6 @@ public class Festival {
     @Column(length = 255, nullable = true)
     private String organizer; // 행사 주관하는 곳
 
-    @NonNull
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
     private int viewCount; // 방문자 수
 
@@ -99,15 +98,27 @@ public class Festival {
             joinColumns = @JoinColumn(name = "festivalId"),
             inverseJoinColumns = @JoinColumn(name = "boothId")
     )
-    private Set<Artist> participatingBooths; // 축제에 참여하는 부스들
+    private Set<Booth> participatingBooths; // 축제에 참여하는 부스들
 
     @ManyToMany(fetch = FetchType.LAZY , mappedBy = "favoriteFestivals")
     private Set<User> favoriteUsers; // 좋아요 누른 사용자들
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "univercityId", nullable = true)
+    @JoinColumn(name = "univercityId")
     private University university;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "festival")
+    private Set<Comment> comments; // 댓글 목록
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "FestivalImage",
+            joinColumns = @JoinColumn(name = "festivalId"),
+            inverseJoinColumns = @JoinColumn(name = "imageId")
+    )
+    private Set<Image> images; // 페스티벌 이미지들
+
 
 
 }

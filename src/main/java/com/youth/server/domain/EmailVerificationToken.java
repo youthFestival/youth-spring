@@ -23,7 +23,6 @@ public class EmailVerificationToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // 기본 키, 자동 증가
 
-    @NonNull
     @Column(nullable = false)
     private int userId; // 유저 아이디
 

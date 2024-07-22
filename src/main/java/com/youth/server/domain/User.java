@@ -17,6 +17,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"favoriteArtists", "likedComments", "favoriteFestivals"})
 public class User {
 
     @Id
@@ -68,7 +69,7 @@ public class User {
     }
 
     public enum Role {
-        ADMIN, USER
+        admin, user
     }
 
     @ManyToMany(fetch = FetchType.LAZY)

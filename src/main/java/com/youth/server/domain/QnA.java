@@ -11,18 +11,18 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class QnA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // 기본 키, 자동 증가
 
-    @NonNull
-    @Column(nullable = false)
-    private int questionId; // 질문 외래 키
+    @OneToOne
+    @JoinColumn(name = "questionId", referencedColumnName = "id")
+    private Inquiry question; // 질문
 
-    @NonNull
-    @Column(nullable = false)
-    private int answerId; // 답변 외래 키
+    @OneToOne
+    @JoinColumn(name = "answerId", referencedColumnName = "id")
+    private Inquiry answer; // 답변
 }

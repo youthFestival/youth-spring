@@ -32,7 +32,6 @@ public class Comment {
     @Column(nullable = false)
     private String content; // 댓글 내용
 
-    @NonNull
     @Column(nullable = false)
     private int userId; // 작성자 아이디
 
@@ -41,5 +40,9 @@ public class Comment {
 
     @ManyToMany(mappedBy = "likedComments")
     private List<User> likedByUsers; // 좋아요를 누른 사용자들
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "festivalId")
+    private Festival festival; // 댓글이 달린 게시글
 
 }

@@ -1,11 +1,7 @@
 package com.youth.server.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.RequiredArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +32,6 @@ public class Inquiry {
     @Column(nullable = false)
     private String content; // 내용
 
-    @NonNull
     @Column(nullable = false)
     private int authorId; // 작성자 ID
 
@@ -48,7 +43,6 @@ public class Inquiry {
     @Column(nullable = false, columnDefinition = "enum('접수중','접수완료','답변완료') default '접수중'")
     private Status status; // 접수 상태
 
-    @NonNull
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isSecret; // 비밀글 여부
 
@@ -59,4 +53,12 @@ public class Inquiry {
     public enum Status {
         접수중, 접수완료, 답변완료
     }
+
+
+    // Assuming a direct reference to QnA for either question or answer
+    @OneToOne(mappedBy = "question")
+    private QnA questionQnA;
+
+    @OneToOne(mappedBy = "answer")
+    private QnA answerQnA;
 }

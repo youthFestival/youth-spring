@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class UserRepositoryTest {
@@ -21,6 +22,12 @@ class UserRepositoryTest {
 
     @Test
     @Transactional
+    void showAllUsers(){
+        System.out.println(userRepository.findAll());
+    }
+
+    @Test
+    @Transactional
     void testUserFavoriteArtists() {
         // Given
         User user = User.builder()
@@ -29,7 +36,7 @@ class UserRepositoryTest {
                 .email("test@example.com")
                 .gender(User.Gender.남성)
                 .username("Test User")
-                .isAdmin(User.Role.USER)
+                .isAdmin(User.Role.user)
                 .isAllowEmail(true)
                 .build();
 
