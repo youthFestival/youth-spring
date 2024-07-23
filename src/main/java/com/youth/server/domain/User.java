@@ -1,5 +1,6 @@
 package com.youth.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,7 @@ public class User {
 
     @NonNull
     @Column(nullable = false, length = 255)
+    @JsonIgnore // 비밀번호 노출 방지
     private String password;
 
     @NonNull
@@ -78,6 +80,7 @@ public class User {
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "artistId")
     )
+    @JsonIgnore
     private Set<Artist> favoriteArtists; // 좋아요 누른 아티스트
 
 
@@ -87,6 +90,7 @@ public class User {
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "commentId")
     )
+    @JsonIgnore
     private Set<Comment> likedComments; // 좋아요 누른 댓글
 
 
@@ -96,5 +100,6 @@ public class User {
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "festivalId")
     )
+    @JsonIgnore
     private Set<Festival> favoriteFestivals; // 좋아요 누른 축제
 }

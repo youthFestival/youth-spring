@@ -45,7 +45,6 @@ public class AuthService {
      */
     public ResponseEntity<Map<?,?>> login(String userId, String password) {
         Optional<User> user = userRepository.findByUserId(userId);
-        System.out.println("yas");
 
 //        @TODO NOT FOUND EXCEIPTIon 파일이 없어서 임시로 대체
         if (!user.isPresent()) {
@@ -89,5 +88,9 @@ public class AuthService {
         response.put("user", user);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public boolean checkUserIdDuplication(String userId) {
+        return userRepository.findByUserId(userId).isPresent();
     }
 }

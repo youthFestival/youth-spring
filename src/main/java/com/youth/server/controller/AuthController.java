@@ -17,15 +17,8 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/test")
-    public String test(){
-        return "test";
-    }
-
-
     @PostMapping("/login")
     public ResponseEntity<Map<?,?>> login(@RequestBody Map<String, String> credentials) {
-        System.out.println("제발");
         String userId = credentials.get("userId");
         String password = credentials.get("password");
         return authService.login(userId, password);
@@ -51,8 +44,19 @@ public class AuthController {
             e.printStackTrace();
             return new ResponseEntity<>(Map.of("message", e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-
-
     }
 
+    @PostMapping("/duplication-username")
+    public ResponseEntity<Map<String,Object>> checkUsernameDuplication(@RequestBody Map<String, String> payload) {
+        String userId = payload.getOrDefault("userId", "");
+        boolean isDup = authService.checkUserIdDuplication(userId);
+        String message = isDup ? "중복된 아이디입니다." : "사용 가능한 아이디입니다.";
+
+        if(isDup){
+            return new ResponseEntity<>(Map.of("message", message,
+                    "duplication", Boolean.toString(isDup)) , HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(Map.of("message", message, "duplication" , Boolean.toString(isDup)), HttpStatus.OK);
+    }
 }
