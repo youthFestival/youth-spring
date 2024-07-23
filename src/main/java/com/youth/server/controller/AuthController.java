@@ -128,4 +128,11 @@ public class AuthController {
                 .put("userId", user.get().getUserId())
                 .build();
     }
+
+    /**
+     * TODO
+     * 인증번호 서버로 전송
+     * 연동회원 가입
+     *  인증 후, 비밀번호 변경
+     */
 }
