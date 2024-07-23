@@ -1,11 +1,8 @@
 package com.youth.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.RequiredArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,6 +15,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString(exclude = {"participatingArtists", "participatingBooths", "favoriteUsers", "university", "comments", "images"})
 public class Festival {
 
     @Id
@@ -42,7 +40,7 @@ public class Festival {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "enum('대학축제', '페스티벌')")
+    @Column(name= "categories",nullable = false, columnDefinition = "enum('대학축제', '페스티벌')")
     private Category category; // 행사 유형
 
     @Column(length = 255, nullable = true)
@@ -90,6 +88,7 @@ public class Festival {
         joinColumns = @JoinColumn(name = "festivalId"),
         inverseJoinColumns = @JoinColumn(name = "artistId")
     )
+    @JsonIgnore
     private Set<Artist> participatingArtists; // 축제에 참여하는 아티스트들
 
 
@@ -98,17 +97,21 @@ public class Festival {
             joinColumns = @JoinColumn(name = "festivalId"),
             inverseJoinColumns = @JoinColumn(name = "boothId")
     )
+    @JsonIgnore
     private Set<Booth> participatingBooths; // 축제에 참여하는 부스들
 
     @ManyToMany(fetch = FetchType.LAZY , mappedBy = "favoriteFestivals")
+    @JsonIgnore
     private Set<User> favoriteUsers; // 좋아요 누른 사용자들
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "univercityId")
+    @JsonIgnore
     private University university;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "festival")
+    @JsonIgnore
     private Set<Comment> comments; // 댓글 목록
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -117,6 +120,7 @@ public class Festival {
             joinColumns = @JoinColumn(name = "festivalId"),
             inverseJoinColumns = @JoinColumn(name = "imageId")
     )
+    @JsonIgnore
     private Set<Image> images; // 페스티벌 이미지들
 
 
