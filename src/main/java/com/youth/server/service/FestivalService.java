@@ -1,6 +1,7 @@
 package com.youth.server.service;
 
 import com.youth.server.domain.Festival;
+import com.youth.server.dto.festival.FestivalRequest;
 import com.youth.server.repository.FestivalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,5 +15,9 @@ public class FestivalService {
 
     public List<Festival> findAllByYearAndMonth(int year, int month) {
         return festivalRepository.findAllByYearAndMonth(year, month);
+    }
+
+    public List<Festival> findFestival(FestivalRequest data) {
+        return festivalRepository.findFestival(data);
     }
 }

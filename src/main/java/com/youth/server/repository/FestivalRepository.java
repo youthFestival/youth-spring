@@ -1,6 +1,7 @@
 package com.youth.server.repository;
 
 import com.youth.server.domain.Festival;
+import com.youth.server.dto.festival.FestivalRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,7 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
     @Query("SELECT f FROM Festival f JOIN f.favoriteUsers u WHERE u.id = :userId")
     List<Festival> findAllByFavoriteUserId(@Param("userId") int userId);
 
+    @Query("SELECT f FROM Festival f WHERE " +
+            "f.name LIMIT = :data.getLimit() AND f.startDate = :data.getStartDate() AND f.endDate = :data.getEndDate()")
+    List<Festival> findFestival(FestivalRequest data);
 }

@@ -47,7 +47,15 @@ public class FestivalController {
     //@TODO 페스티벌 검색 + 티켓 예매 정보 (메인페이지 +  마이페이지)
     @GetMapping
     public RestEntity findFestival(@RequestParam FestivalRequest data){
-
+        List<Festival> festivals = festivalService.findFestival(data);
+        return RestEntity.builder()
+                .status(HttpStatus.CREATED)
+                .message(festivals.isEmpty()
+                        ? "일자에 맞는 축제가 없습니다."
+                        : "일자에 맞는 축제 %d개가 조회되었습니다.".formatted(festivals.size())
+                )
+                .put("festivals", festivals)
+                .build();
     }
     /**
      Name	Type	Description	필수
