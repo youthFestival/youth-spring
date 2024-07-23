@@ -1,17 +1,21 @@
 package com.youth.server.controller;
 
+import com.youth.server.domain.Artist;
 import com.youth.server.domain.Festival;
+import com.youth.server.domain.Image;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.festival.FestivalRequest;
+import com.youth.server.exception.NotFoundException;
 import com.youth.server.service.FestivalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Param 가져오는법
@@ -57,25 +61,88 @@ public class FestivalController {
                 .put("festivals", festivals)
                 .build();
     }
-    /**
-     Name	Type	Description	필수
-     limit	INT	한페이지에서 보여줄 포스터의 갯수	X
-     offset	INT 	보여줄 포스터 시작점	X ?
-     sortBy	String	정렬 (”거리순”,”인기순”,”최신순”) order by
 
-     거리순 : distance
-     인기순 : interest
-     최신순 : recent
-     티켓예매순 :  reservation	X
-     locality	String	지역명 	X
-     categories	String	페스티벌
-     대학축제
-     전체	X
-     search	String	목록 검색	X
-     pick	String	찜 : choice (찜 목록)	X
-     */
+    @GetMapping("{festivalId}")
+    public RestEntity getFestivalDetail(@PathVariable(name="festivalId") int festivalId){
+        Festival festival = festivalService.findFestivalById(festivalId);
 
+        Optional<String> festivalThumbnail = festival.getImages().stream()
+                .filter(image -> image.getCategory().equals(Image.Category.포스터))
+                .map(Image::getImgUrl)
+                .findFirst();
 
-    //@TODO 페스티벌 상세 정보 조회
+        String festivalThumbnailUrl = festivalThumbnail.orElse("이미지가 없습니다.");
 
+        return RestEntity.builder()
+                .status(HttpStatus.CREATED)
+                .message("조회되었습니다.")
+                .put("festivalThumbnail", festivalThumbnailUrl)
+                .put("festivalName", festival.getName())
+                .put("description", festival.getDescription())
+                .put("startDate", festival.getStartDate())
+                .put("endDate", festival.getEndDate())
+                .put("showTime", Duration.between(festival.getStageOpen(),festival.getStageClose()).toHours())
+                .put("category", festival.getCategory())
+                .put("organizer", festival.getOrganizer())
+                .put("minAge", festival.getMinAge())
+                .put("tel",festival.getTel())
+                .put("organizerUrl", festival.getOrganizerUrl())
+                .build();
+    }
+
+    // 라인업
+    @GetMapping("{festivalId}/line-up")
+    public RestEntity getFestivalLineUp(@PathVariable(name="festivalId") int festivalId){
+
+        return RestEntity.builder()
+                .status(HttpStatus.CREATED)
+                .message("조회되었습니다.")
+                .put("lineUp", festivalService.getFestivalLineUpById(festivalId))
+                .build();
+    }
+
+    // 축제 포스터
+    @GetMapping("{festivalId}/poster")
+    public RestEntity getFestivalPoster(@PathVariable(name="festivalId") int festivalId){
+        Festival festival = festivalService.findFestivalById(festivalId);
+
+        Optional<String> festivalPoster = festival.getImages().stream()
+                .filter(image -> image.getCategory().equals(Image.Category.포스터))
+                .map(Image::getImgUrl)
+                .findFirst();
+
+        String festivalPosterUrl = festivalPoster.orElse("이미지가 없습니다.");
+
+        return RestEntity.builder()
+                .status(HttpStatus.CREATED)
+                .message("조회되었습니다.")
+                .put("posterImage", festivalPosterUrl)
+                .build();
+    }
+
+    // 행사사진 포스터
+    @GetMapping("{festivalId}/pictures")
+    public RestEntity getFestivalPictures(@PathVariable(name="festivalId") int festivalId){
+        Festival festival = festivalService.findFestivalById(festivalId);
+
+        ArrayList<String> pictures = new ArrayList<>();
+
+        festival.getImages().stream()
+                .filter(image -> image.getCategory().equals(Image.Category.행사_사진))
+                .forEach(image -> pictures.add(image.getImgUrl()));
+
+        if(pictures.isEmpty()){
+            throw new NotFoundException("행사에 이미지가 존재하지 않습니다.");
+        }
+
+        return RestEntity.builder()
+                .status(HttpStatus.CREATED)
+                .message("조회되었습니다.")
+                .put("posterImage", pictures)
+                .build();
+    }
+
+//    /@TODO 주변 축제 추천
+
+    // 부스
 }

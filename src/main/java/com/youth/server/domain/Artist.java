@@ -1,11 +1,8 @@
 package com.youth.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.RequiredArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import java.util.Set;
 
@@ -17,6 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString(exclude = {"subscribedUsers", "participatingFestivals"})
 public class Artist {
 
     @Id
@@ -27,12 +25,16 @@ public class Artist {
     @Column(length = 255, nullable = false)
     private String name; // 가수 이름
 
-    @Column(nullable = false)
-    private int imageId; // 프로필 이미지 ID (외래 키)
+    @JoinColumn(name = "imageId", nullable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Image artistProfileImage;
 
     @ManyToMany(mappedBy = "favoriteArtists", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<User> subscribedUsers; // 구독한 유저 목록
 
     @ManyToMany(mappedBy = "participatingArtists", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Festival> participatingFestivals; // 참가하는 축제 목록
 }

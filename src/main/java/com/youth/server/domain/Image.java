@@ -1,5 +1,6 @@
 package com.youth.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString(exclude = {"festivals", "artists"})
 public class Image {
 
     @Id
@@ -28,13 +30,20 @@ public class Image {
     private String imgUrl; // 이미지 주소
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "enum('행사_사진','구조도','포스터','행사_정보','부스','기타','대학로고','아티스트') default '기타'")
+    @Column(name="categories", nullable = false, columnDefinition = "enum('행사_사진','구조도','포스터','행사_정보','부스','기타','대학로고','아티스트') default '기타'")
     private Category category; // 이미지 타입
 
     public enum Category {
         행사_사진, 구조도, 포스터, 행사_정보, 부스, 기타, 대학로고, 아티스트
     }
 
-    @ManyToMany(mappedBy = "images")
+    @ManyToMany(mappedBy = "images", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Festival> festivals;
+
+    @OneToOne(mappedBy = "artistProfileImage", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Artist artists;
+
+
 }
