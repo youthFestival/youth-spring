@@ -1,7 +1,6 @@
 package com.youth.server.service;
 
 import com.youth.server.domain.User;
-//import com.youth.server.exception.NotFoundException;
 import com.youth.server.exception.WrongInputException;
 import com.youth.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class AuthService {
      * @param password 비밀번호
      * @return 로그인 결과
      */
-    public ResponseEntity<Map<?,?>> login(String userId, String password) {
+    public Optional<User> login(String userId, String password) {
         Optional<User> user = userRepository.findByUserId(userId);
 
 //        @TODO NOT FOUND EXCEIPTIon 파일이 없어서 임시로 대체
@@ -54,13 +53,9 @@ public class AuthService {
         if (!passwordEncoder.matches(password, user.get().getPassword())) {
             throw new WrongInputException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
-        // 로그인 성공
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("message", "Login successful.");
-        response.put("user", user.get());
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // 로그인 성공
+        return user;
     }
 
     /**
@@ -92,5 +87,9 @@ public class AuthService {
 
     public boolean checkUserIdDuplication(String userId) {
         return userRepository.findByUserId(userId).isPresent();
+    }
+
+    public Optional<User> findUsernameEmail(String username, String email) {
+        return userRepository.findByUsernameAndEmail(username, email);
     }
 }

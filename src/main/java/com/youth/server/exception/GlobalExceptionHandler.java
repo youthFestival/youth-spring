@@ -16,8 +16,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    //@TODO NotFoundException.class 추가
-    @ExceptionHandler({ WrongInputException.class})
+    @ExceptionHandler({ WrongInputException.class ,NotFoundException.class})
     public ResponseEntity<Map<String, Object>> handleNotFoundException(RuntimeException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
