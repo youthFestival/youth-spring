@@ -19,8 +19,7 @@ import java.util.Optional;
 public class AuthController {
     private static final String AUTH_TOKEN_NAME = "token";
 
-    @Autowired
-    private AuthService authService;
+    @Autowired private AuthService authService;
 
     @PostMapping("/login")
     public RestEntity login(HttpServletResponse response, @RequestBody Map<String, String> credentials) {
@@ -29,9 +28,9 @@ public class AuthController {
         User loggedInUser = authService.login(userId, password);
 
         // @TODO
-        Cookie jwtCookie = new Cookie(AUTH_TOKEN_NAME,"NANSUIIIIIIII");
+        Cookie jwtCookie = new Cookie(AUTH_TOKEN_NAME," NANSUIIIIIIII");
         jwtCookie.setMaxAge(60*30);//30분
-        jwtCookie.setSecure(false);//https를 통해서만 쿠키를 주고받을 수 있도록 설정
+        jwtCookie.setSecure(false);//https 를 통해서만 쿠키를 주고받을 수 있도록 설정
         response.addCookie(jwtCookie);
 
         return RestEntity.builder().
@@ -43,14 +42,12 @@ public class AuthController {
 
     /**
      * 로그아웃
-     * @param response
-     * @return
      */
     @GetMapping("/logout")
     public RestEntity logout(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie(AUTH_TOKEN_NAME, null);
         jwtCookie.setMaxAge(0);
-        jwtCookie.setSecure(false);//https를 통해서만 쿠키를 주고받을 수 있도록 설정
+        jwtCookie.setSecure(false);//https 를 통해서만 쿠키를 주고받을 수 있도록 설정
 
         response.addCookie(jwtCookie);
 
@@ -115,7 +112,7 @@ public class AuthController {
         String username = payload.getOrDefault("username", "");
         String email = payload.getOrDefault("email", "");
 
-        if(username.equals("") || email.equals("")){
+        if(username.isEmpty() || email.isEmpty()){
             throw new IllegalArgumentException("성함 또는 이메일을 확인해주세요.");
         }
 
