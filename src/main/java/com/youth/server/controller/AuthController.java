@@ -31,6 +31,7 @@ public class AuthController {
 
         // 토큰 만들건데, userId랑 role을 넣어서 만들어야함
         Cookie jwtCookie = new Cookie(Const.AUTH_TOKEN_NAME, jwtUtil.createAccessToken(Map.of(
+                "id",String.valueOf(loggedInUser.getId()),
                 "userId", loggedInUser.getUserId(),
                 "role", loggedInUser.getIsAdmin().toString()
         )) );

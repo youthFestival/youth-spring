@@ -3,10 +3,13 @@ package com.youth.server.service;
 import com.youth.server.domain.Artist;
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
+import com.youth.server.dto.SearchFestivalByFilterDTO;
+import com.youth.server.dto.festival.FestivalRequest;
 import com.youth.server.dto.festival.LineUpDTO;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.repository.FestivalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,10 +26,6 @@ public class FestivalService {
     public List<Festival> findAllByYearAndMonth(int year, int month) {
         return festivalRepository.findAllByYearAndMonth(year, month);
     }
-
-//    public List<Festival> findFestival(FestivalRequest data) {
-//        return festivalRepository.findFestival(data);
-//    }
 
     public Festival findFestivalById(int festivalId) {
         Optional<Festival> festival = festivalRepository.findFestivalById(festivalId);
@@ -64,4 +63,15 @@ public class FestivalService {
     }
 
 
+    public List<Festival> findFavoriteFestivalByUid(int uid) {
+        return festivalRepository.findAllByFavoriteUserId(uid);
+    }
+
+    public List<SearchFestivalByFilterDTO> findFestival(FestivalRequest data, PageRequest of) {
+        return festivalRepository.findFestivalByDTO(data, of);
+    }
+
+    public List<Festival> findTop3ByRecommendFestival() {
+        return festivalRepository.findTop3();
+    }
 }

@@ -65,5 +65,23 @@ public class JwtUtil {
                 .map(authCookie -> getValueOf(authCookie, "userId"));
     }
 
+    /*
+     *JWT 쿠키(token) 로부터 유저키 (id) 를 가져옵니다.
+     * @param request {HttpServletRequest} 요청 객체
+     * @return {Optional<Integer>} 유저키 (id)
+     */
+    public Optional<Integer> getUid(HttpServletRequest request) {
+
+        return CookieParserUtil.getFromServletRequest(Const.AUTH_TOKEN_NAME, request)
+                .map(authCookie -> getValueOf(authCookie, "id"))
+                .map(uid -> {
+                    try {
+                        return Integer.parseInt(uid);
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                });
+    }
+
 }
 

@@ -1,6 +1,9 @@
 package com.youth.server.repository;
 
 import com.youth.server.domain.Festival;
+import com.youth.server.dto.SearchFestivalByFilterDTO;
+import com.youth.server.dto.festival.FestivalRequest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,23 +23,36 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
     List<Festival> findAllByYearAndMonth(@Param("year")int year, @Param("month")int month);
 
 
-    @Query("SELECT f FROM Festival f JOIN f.favoriteUsers u WHERE u.id = :userId")
-    List<Festival> findAllByFavoriteUserId(@Param("userId") int userId);
+    @Query("SELECT f FROM Festival f JOIN f.favoriteUsers u WHERE u.id = :uid")
+    List<Festival> findAllByFavoriteUserId(@Param("uid") int uid);
 
     Optional<Festival> findFestivalById(int festivalId);
 
 
     List<Festival> findTop5ByNameIsContaining(String name);
 
-//    @Query("""
-//            SELECT f
-//            FROM Festival f
-//            WHERE f.locality = :data.locality
-//            LIMIT = :data.limit OFFSET = :data.offset
-//            """)
-//    List<Festival> findFestival(FestivalRequest data);
-
-    // 페스티벌 id에 해당하는 FestivalArtist 관계테이블에서 Artist 가져오기
 
     Optional<Festival> findById(int id);
+
+    @Query("""
+        SELECT new com.youth.server.dto.SearchFestivalByFilterDTO(
+           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl) ,f.viewCount,f.ticketOpen , COUNT(u.id)
+        )
+        From Festival f join f.images i
+        left join f.favoriteUsers u
+        where
+        (:#{#data.search} IS NULL OR f.name LIKE %:#{#data.search}%) AND
+        (:#{#data.locality} IS NULL OR f.locality = :#{#data.locality}) AND
+        (:#{#data.categories} IS NULL OR f.category = :#{#data.getCategory()}) AND
+        (:#{#data.isOngoing} IS NULL OR (
+            f.startDate <= CURRENT_DATE() AND f.endDate >= CURRENT_DATE()
+        ))
+        GROUP BY f.id, f.name, f.startDate, f.endDate, f.locality, f.viewCount, f.ticketOpen
+        ORDER BY f.id
+   
+
+""")
+    List<SearchFestivalByFilterDTO> findFestivalByDTO(@Param("data")FestivalRequest data, PageRequest of);
+
+    List<Festival> findTop3();
 }

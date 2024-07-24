@@ -45,4 +45,5 @@ public class GlobalExceptionHandler {
                 .put("description", ex.getMessage())
                 .build();
     }
+
 }
