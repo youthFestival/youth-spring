@@ -62,6 +62,7 @@ public class CommentController {
                 .build();
     }
 
+    // 댓글 생성
     @PostMapping
     public RestEntity createComment(HttpServletRequest request, @RequestBody Map<String, String> payload) {
 

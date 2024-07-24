@@ -102,4 +102,9 @@ public class User {
     )
     @JsonIgnore
     private Set<Festival> favoriteFestivals; // 좋아요 누른 축제
+
+    // 해당 유저가 달은 댓글 목록
+    @OneToMany(mappedBy ="author")
+    @JsonIgnore
+    private Set<Comment> comments;
 }

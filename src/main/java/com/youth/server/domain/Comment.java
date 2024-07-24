@@ -3,6 +3,8 @@ package com.youth.server.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,15 +23,18 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // 기본 키, 자동 증가
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+
+    @Column
+    @CurrentTimestamp
     private LocalDateTime updatedAt; // 댓글 작성 날짜
 
     @NonNull
     @Column(nullable = false)
     private String content; // 댓글 내용
 
-    @Column(nullable = false)
-    private int userId; // 작성자 아이디
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User author; // 작성자 아이디
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private int createdAt; // 댓글 작성 날짜
