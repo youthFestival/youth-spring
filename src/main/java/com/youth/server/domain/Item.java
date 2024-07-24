@@ -10,7 +10,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Item {
 
     @Id

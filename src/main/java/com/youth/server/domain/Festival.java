@@ -14,7 +14,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString(exclude = {"participatingArtists", "participatingBooths", "favoriteUsers", "university", "comments", "images"})
 public class Festival {
 

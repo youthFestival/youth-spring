@@ -15,7 +15,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 //@ToString(exclude = {"favoriteArtists", "likedComments", "favoriteFestivals"})

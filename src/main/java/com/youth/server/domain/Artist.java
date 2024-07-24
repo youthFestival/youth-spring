@@ -13,7 +13,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @ToString(exclude = {"subscribedUsers", "participatingFestivals"})
 public class Artist {
 
