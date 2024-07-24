@@ -1,7 +1,10 @@
 package com.youth.server.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 고객 문의와 답변 관계 테이블

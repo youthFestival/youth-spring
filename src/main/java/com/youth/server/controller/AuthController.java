@@ -5,9 +5,11 @@ import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.UserDTO;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.service.AuthService;
+import com.youth.server.util.Const;
+import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +18,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    private static final String AUTH_TOKEN_NAME = "token";
-
-    @Autowired private AuthService authService;
+    private final AuthService authService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public RestEntity login(HttpServletResponse response, @RequestBody Map<String, String> credentials) {
@@ -27,9 +29,14 @@ public class AuthController {
         String password = credentials.get("password");
         User loggedInUser = authService.login(userId, password);
 
-        // @TODO
-        Cookie jwtCookie = new Cookie(AUTH_TOKEN_NAME," NANSUIIIIIIII");
+        // 토큰 만들건데, userId랑 role을 넣어서 만들어야함
+        Cookie jwtCookie = new Cookie(Const.AUTH_TOKEN_NAME, jwtUtil.createAccessToken(Map.of(
+                "userId", loggedInUser.getUserId(),
+                "role", loggedInUser.getIsAdmin().toString()
+        )) );
+
         jwtCookie.setMaxAge(60*30);//30분
+        jwtCookie.setPath("/api");
         jwtCookie.setSecure(false);//https 를 통해서만 쿠키를 주고받을 수 있도록 설정
         response.addCookie(jwtCookie);
 
@@ -45,7 +52,7 @@ public class AuthController {
      */
     @GetMapping("/logout")
     public RestEntity logout(HttpServletResponse response) {
-        Cookie jwtCookie = new Cookie(AUTH_TOKEN_NAME, null);
+        Cookie jwtCookie = new Cookie(Const.AUTH_TOKEN_NAME, null);
         jwtCookie.setMaxAge(0);
         jwtCookie.setSecure(false);//https 를 통해서만 쿠키를 주고받을 수 있도록 설정
 

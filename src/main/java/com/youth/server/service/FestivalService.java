@@ -3,19 +3,22 @@ package com.youth.server.service;
 import com.youth.server.domain.Artist;
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
-import com.youth.server.dto.festival.FestivalRequest;
 import com.youth.server.dto.festival.LineUpDTO;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.repository.FestivalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class FestivalService {
 
-    @Autowired private FestivalRepository festivalRepository;
+    private final FestivalRepository festivalRepository;
 
     public List<Festival> findAllByYearAndMonth(int year, int month) {
         return festivalRepository.findAllByYearAndMonth(year, month);

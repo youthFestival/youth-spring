@@ -1,8 +1,6 @@
 package com.youth.server.repository;
 
-import com.youth.server.domain.Artist;
 import com.youth.server.domain.Festival;
-import com.youth.server.dto.festival.FestivalRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface FestivalRepository extends JpaRepository<Festival, Integer> {
@@ -27,6 +24,9 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
     List<Festival> findAllByFavoriteUserId(@Param("userId") int userId);
 
     Optional<Festival> findFestivalById(int festivalId);
+
+
+    List<Festival> findTop5ByNameIsContaining(String name);
 
 //    @Query("""
 //            SELECT f

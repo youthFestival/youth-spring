@@ -1,13 +1,11 @@
 package com.youth.server.controller;
 
-import com.youth.server.domain.Artist;
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
 import com.youth.server.dto.RestEntity;
-import com.youth.server.dto.festival.FestivalRequest;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.service.FestivalService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +13,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Param 가져오는법
@@ -25,11 +22,11 @@ import java.util.Set;
  *     }
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/festival")
 public class FestivalController {
 
-    @Autowired
-    FestivalService festivalService;
+    private final FestivalService festivalService;
 
     /**
      * 일자에 맞는 축제 조회
@@ -49,18 +46,18 @@ public class FestivalController {
 
 
     //@TODO 페스티벌 검색 + 티켓 예매 정보 (메인페이지 +  마이페이지)
-    @GetMapping
-    public RestEntity findFestival(@RequestParam FestivalRequest data){
-        List<Festival> festivals = festivalService.findFestival(data);
-        return RestEntity.builder()
-                .status(HttpStatus.CREATED)
-                .message(festivals.isEmpty()
-                        ? "일자에 맞는 축제가 없습니다."
-                        : "일자에 맞는 축제 %d개가 조회되었습니다.".formatted(festivals.size())
-                )
-                .put("festivals", festivals)
-                .build();
-    }
+//    @GetMapping
+//    public RestEntity findFestival(@RequestParam FestivalRequest data){
+//        List<Festival> festivals = festivalService.findFestival(data);
+//        return RestEntity.builder()
+//                .status(HttpStatus.CREATED)
+//                .message(festivals.isEmpty()
+//                        ? "일자에 맞는 축제가 없습니다."
+//                        : "일자에 맞는 축제 %d개가 조회되었습니다.".formatted(festivals.size())
+//                )
+//                .put("festivals", festivals)
+//                .build();
+//    }
 
     @GetMapping("{festivalId}")
     public RestEntity getFestivalDetail(@PathVariable(name="festivalId") int festivalId){

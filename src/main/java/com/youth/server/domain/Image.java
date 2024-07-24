@@ -34,7 +34,7 @@ public class Image {
     private Category category; // 이미지 타입
 
     public enum Category {
-        행사_사진, 구조도, 포스터, 행사_정보, 부스, 기타, 대학로고, 아티스트
+        행사_사진, 구조도, 포스터, 행사_정보, 부스, 기타, 대학로고, 아티스트, 썸네일
     }
 
     @ManyToMany(mappedBy = "images", fetch = FetchType.LAZY)

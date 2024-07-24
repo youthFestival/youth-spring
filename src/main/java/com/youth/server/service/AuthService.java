@@ -3,35 +3,19 @@ package com.youth.server.service;
 import com.youth.server.domain.User;
 import com.youth.server.exception.WrongInputException;
 import com.youth.server.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.youth.server.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-
     private final UserRepository userRepository;
-
-    @Autowired
-    public AuthService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    // 비밀번호 암호화
-    public String encodePassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
-
-    // 비밀번호 검증
-    public boolean matchesPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
-    }
-
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
     /**
      * 로그인
      * @param userId 아이디
@@ -41,8 +25,7 @@ public class AuthService {
     public User login(String userId, String password) {
         Optional<User> user = userRepository.findByUserId(userId);
 
-//        @TODO NOT FOUND EXCEIPTIon 파일이 없어서 임시로 대체
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new WrongInputException("존재하지 않는 사용자입니다.");
         }
         // 비밀번호 일치 여부 확인
@@ -80,5 +63,11 @@ public class AuthService {
 
     public Optional<User> findUsernameEmail(String username, String email) {
         return userRepository.findByUsernameAndEmail(username, email);
+    }
+
+    public Optional<User> getUserFromToken(String jwt) {
+        String userId = jwtUtil.getValueOf(jwt, "userId").toString();
+        // 토큰 검증
+        return userRepository.findByUserId(userId);
     }
 }
