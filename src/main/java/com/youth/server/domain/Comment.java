@@ -33,8 +33,9 @@ public class Comment {
     @Column(nullable = false)
     private String content; // 댓글 내용
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
     private User author; // 작성자 아이디
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -45,7 +46,7 @@ public class Comment {
     private List<User> likedByUsers; // 좋아요를 누른 사용자들
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "festivalId")
+    @JoinColumn(name = "festivalId", nullable = false)
     @JsonIgnore
     private Festival festival; // 댓글이 달린 게시글
 
