@@ -9,5 +9,5 @@ import java.util.Set;
 public interface CommentRepository extends JpaRepository<Comment,Integer> {
     Set<Comment> findAllByFestivalId(int festivalId, PageRequest of);
 
-    Set<Comment> findAllByUserId(int userId);
+    Set<Comment> findAllByAuthorId(int userId);
 }

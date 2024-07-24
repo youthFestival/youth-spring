@@ -23,7 +23,7 @@ public class CommentService {
 
 
     public Set<Comment> getCommentsByUserId(int userId) {
-        return commentRepository.findAllByUserId(userId);
+        return commentRepository.findAllByAuthorId(userId);
     }
 
     public Comment join(Comment comment) {

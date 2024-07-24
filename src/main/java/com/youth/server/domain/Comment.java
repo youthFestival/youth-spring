@@ -38,8 +38,9 @@ public class Comment {
     @JoinColumn(name = "userId", nullable = false)
     private User author; // 작성자 아이디
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private int createdAt; // 댓글 작성 날짜
+    @Column
+    @CreationTimestamp
+    private LocalDateTime createdAt; // 댓글 작성 날짜
 
     @ManyToMany(mappedBy = "likedComments" ,fetch = FetchType.LAZY)
     @JsonIgnore

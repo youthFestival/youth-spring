@@ -2,11 +2,13 @@ package com.youth.server.controller;
 
 import com.youth.server.domain.Comment;
 import com.youth.server.domain.Festival;
+import com.youth.server.domain.User;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.exception.PermissionDeniedException;
 import com.youth.server.service.CommentService;
 import com.youth.server.service.FestivalService;
+import com.youth.server.service.UserService;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ public class CommentController {
 
     private final CommentService commentService;
     private final FestivalService festivalService;
+    private final UserService userService;
     private final JwtUtil jwtUtil;
 
 
@@ -66,24 +69,30 @@ public class CommentController {
     @PostMapping
     public RestEntity createComment(HttpServletRequest request, @RequestBody Map<String, String> payload) {
 
+        User currentUser  = jwtUtil.getUserId(request)
+                .flatMap(userService::findByUserId)
+                .orElseThrow(()-> new PermissionDeniedException("로그인이 필요합니다."));
 
-        Optional<String> currentUserId = jwtUtil.getUserId(request);
-        if (currentUserId.isEmpty()) throw new PermissionDeniedException("로그인이 필요합니다.");
-
-        Comment comment = new Comment();
+        // 댓글 작성할 페스티벌 객체 가져오기
         Festival festival = Optional.of(payload.get("festivalId")).map(Integer::parseInt)
                 .map(festivalService::findFestivalById)
                 .orElseThrow(() -> new NotFoundException("해당 아이디에 해당하는 페스티벌을 찾을 수 없습니다."));
 
-        comment.setFestival(festival);
-        comment.setContent(payload.get("content"));
 
-        commentService.join(comment);
+        // 작성하는 유저 정보 가져오기
+        Comment newComment = Comment.builder()
+                .festival(festival)
+                .author(currentUser)
+                .content(payload.get("content"))
+                .build();
+
 
         return RestEntity.builder()
                 .status(HttpStatus.CREATED)
                 .message("댓글 생성 성공")
-                .put("comment", commentService.createComment(null))
+                .put("comment", commentService.join(newComment))
                 .build();
     }
+
+
 }
