@@ -1,7 +1,10 @@
 package com.youth.server.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * 아이템 정보

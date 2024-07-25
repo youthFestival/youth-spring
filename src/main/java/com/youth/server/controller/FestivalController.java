@@ -2,7 +2,6 @@ package com.youth.server.controller;
 
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
-import com.youth.server.domain.User;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.SearchFestivalByFilterDTO;
 import com.youth.server.dto.festival.FestivalRequest;

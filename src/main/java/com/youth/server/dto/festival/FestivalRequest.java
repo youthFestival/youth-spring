@@ -1,12 +1,10 @@
 package com.youth.server.dto.festival;
 
 import com.youth.server.domain.Festival;
-import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Data
 @NoArgsConstructor
