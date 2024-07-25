@@ -43,7 +43,7 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
         where
         (:#{#data.search} IS NULL OR f.name LIKE %:#{#data.search}%) AND
         (:#{#data.locality} IS NULL OR f.locality = :#{#data.locality}) AND
-        (:#{#data.categories} IS NULL OR f.category = :#{#data.getCategory()}) AND
+        (:#{#data.category} IS NULL OR f.category = :#{#data.getCategory()}) AND
         (:#{#data.isOngoing} IS NULL OR (
             f.startDate <= CURRENT_DATE() AND f.endDate >= CURRENT_DATE()
         ))

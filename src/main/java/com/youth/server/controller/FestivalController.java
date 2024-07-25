@@ -60,13 +60,13 @@ public class FestivalController {
                                    @RequestParam(name= "offset", required = false, defaultValue = ""+Const.DEAFULT_OFFSET) Integer offset,
                                    @RequestParam(name= "sortBy", required = false) String sortBy,
                                    @RequestParam(name= "locality", required = false) String locality,
-                                   @RequestParam(name= "categories", required = false) String categories,
+                                   @RequestParam(name= "category", required = false) String category,
                                    @RequestParam(name= "search", required = false) String search,
                                    @RequestParam(name= "isFavorite", required = false, defaultValue = "false") Boolean isFavorite,
                                    @RequestParam(name= "isOngoing", required = false) Boolean isOngoing,
                                    HttpServletRequest request
     ){
-        FestivalRequest data = FestivalRequest.builder().limit(limit).offset(offset).sortBy(sortBy).locality(locality).categories(categories).search(search).isFavorite(isFavorite).build();
+        FestivalRequest data = FestivalRequest.builder().limit(limit).offset(offset).sortBy(sortBy).locality(locality).category(category).search(search).isFavorite(isFavorite).build();
 
 
         // 로그인 여부 확인 (isFavorite)

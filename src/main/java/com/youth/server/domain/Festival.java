@@ -40,7 +40,7 @@ public class Festival {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(name= "categories",nullable = false, columnDefinition = "enum('대학축제', '페스티벌')")
+    @Column(name= "category",nullable = false, columnDefinition = "enum('대학축제', '페스티벌')")
     private Category category; // 행사 유형
 
     @Column(length = 255, nullable = true)
