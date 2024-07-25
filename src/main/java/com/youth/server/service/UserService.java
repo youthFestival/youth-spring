@@ -5,6 +5,7 @@ import com.youth.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,4 +17,9 @@ public class UserService {
     public Optional<User> findByUserId(String s) {
         return userRepository.findByUserId(s);
     }
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
 }

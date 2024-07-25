@@ -1,5 +1,6 @@
 package com.youth.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,8 +33,10 @@ public class Inquiry {
     @Column(nullable = false)
     private String content; // 내용
 
-    @Column(nullable = false)
-    private int authorId; // 작성자 ID
+    @JoinColumn(name="authorId")
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author; // 작성자 ID
 
     @NonNull
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -46,8 +49,11 @@ public class Inquiry {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isSecret; // 비밀글 여부
 
+    @Column(nullable = true)
+    private int festivalId; //  축제 ID
+
     public enum Category {
-        페스티벌, 계정
+        질문, 기타, 답변
     }
 
     public enum Status {
@@ -56,9 +62,7 @@ public class Inquiry {
 
 
     // Assuming a direct reference to QnA for either question or answer
-    @OneToOne(mappedBy = "question")
-    private QnA questionQnA;
-
-    @OneToOne(mappedBy = "answer")
-    private QnA answerQnA;
+    @JoinColumn(name="replyId")
+    @OneToOne(fetch = FetchType.EAGER)
+    private Inquiry reply;
 }

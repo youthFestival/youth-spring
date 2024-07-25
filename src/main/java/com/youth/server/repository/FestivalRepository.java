@@ -54,5 +54,8 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
 """)
     List<SearchFestivalByFilterDTO> findFestivalByDTO(@Param("data")FestivalRequest data, PageRequest of);
 
-    List<Festival> findTop3();
+
+    // 3개 랜덤 탐색 인기순
+    @Query("SELECT f FROM Festival f ORDER BY f.viewCount DESC")
+    List<Festival> findTop3(PageRequest of);
 }

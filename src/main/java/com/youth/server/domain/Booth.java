@@ -1,5 +1,6 @@
 package com.youth.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,10 @@ public class Booth {
     }
 
     @OneToMany(mappedBy = "booth", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Item> items;
 
     @ManyToMany(mappedBy = "participatingBooths")
+    @JsonIgnore
     private Set<Festival> festivals;
 }

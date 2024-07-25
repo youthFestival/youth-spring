@@ -124,6 +124,7 @@ public class FestivalController {
                 .build();
     }
 
+    // 축제 상세정보
 
     @GetMapping("{festivalId}")
     public RestEntity getFestivalDetail(@PathVariable(name="festivalId") int festivalId){
@@ -150,6 +151,7 @@ public class FestivalController {
                 .put("minAge", festival.getMinAge())
                 .put("tel",festival.getTel())
                 .put("organizerUrl", festival.getOrganizerUrl())
+                .put("geoLocation", festival.getGeoLocationId())
                 .build();
     }
 
@@ -221,4 +223,16 @@ public class FestivalController {
                 .put("recommendFestivals", festivalService.findTop3ByRecommendFestival())
                 .build();
     }
+
+    // 부스가져오기
+    @GetMapping("{festivalId}/booths")
+    public RestEntity getAllBooths(@PathVariable(name="festivalId") int festivalId){
+        return RestEntity.builder()
+                .status(HttpStatus.CREATED)
+                .message("조회되었습니다.")
+                .put("booths", festivalService.getBoothsById(festivalId))
+                .build();
+    }
+
+
 }

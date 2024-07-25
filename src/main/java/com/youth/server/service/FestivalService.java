@@ -1,6 +1,7 @@
 package com.youth.server.service;
 
 import com.youth.server.domain.Artist;
+import com.youth.server.domain.Booth;
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
 import com.youth.server.dto.SearchFestivalByFilterDTO;
@@ -72,6 +73,10 @@ public class FestivalService {
     }
 
     public List<Festival> findTop3ByRecommendFestival() {
-        return festivalRepository.findTop3();
+        return festivalRepository.findTop3(PageRequest.of(0,3));
+    }
+
+    public Set<Booth> getBoothsById(int festivalId) {
+        return findFestivalById(festivalId).getParticipatingBooths();
     }
 }

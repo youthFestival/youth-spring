@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -37,9 +38,12 @@ public class Event {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isChecked; // 알람 확인 여부
 
-    @NonNull
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
+    @Column
     private LocalDateTime createdAt; // 이벤트 생성 시간
+
+    @Column
+    private int userId; // 사용자 아이디
 
     public enum Category {
         디데이, 문의답변, 구독한_행사_이벤트, 좋아하는_아티스트_행사_알림, 대댓글}

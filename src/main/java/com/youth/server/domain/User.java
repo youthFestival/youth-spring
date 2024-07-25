@@ -106,4 +106,9 @@ public class User {
     @OneToMany(mappedBy ="author", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Comment> comments;
+
+    // 유저 문의 글 정보
+    @OneToMany(mappedBy ="author")
+    @JsonIgnore
+    private Set<Inquiry> inquiries;
 }

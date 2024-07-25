@@ -1,5 +1,6 @@
 package com.youth.server.util;
 
+import com.youth.server.domain.User;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,5 +84,10 @@ public class JwtUtil {
                 });
     }
 
+    public Optional<User.Role> getRole(HttpServletRequest request) {
+          return CookieParserUtil.getFromServletRequest(Const.AUTH_TOKEN_NAME, request)
+                .map(authCookie -> getValueOf(authCookie, "role"))
+                .map(User.Role::valueOf);
+    }
 }
 

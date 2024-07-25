@@ -31,8 +31,9 @@ public class Festival {
     @Column(nullable = true)
     private LocalDateTime endDate; // 축제 종료 날짜
 
-    @Column(nullable = true)
-    private Integer geoLocationId; // 위치 (외래 키)
+    @JoinColumn(name = "geoLocationId")
+    @OneToOne(fetch = FetchType.EAGER)
+    private Geolocation geoLocationId; // 위치 (외래 키)
 
     @Column(nullable = true)
     private String description; // 설명
