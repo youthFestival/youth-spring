@@ -36,9 +36,11 @@ public class AuthController {
                 "role", loggedInUser.getIsAdmin().toString()
         )) );
 
-        jwtCookie.setMaxAge(60*30);//30분
-        jwtCookie.setPath("/api");
-        jwtCookie.setSecure(false);//https 를 통해서만 쿠키를 주고받을 수 있도록 설정
+        jwtCookie.setMaxAge(60*30*100000);//30분
+        jwtCookie.setPath("/");
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setAttribute("sameSite", "none");
+        jwtCookie.setSecure(true); // https 를 통해서만 쿠키를 주고받을 수 있도록 설정
         response.addCookie(jwtCookie);
 
         return RestEntity.builder().

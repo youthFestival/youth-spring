@@ -65,6 +65,10 @@ public class User {
     @Column(nullable = false)
     private boolean isAllowEmail;
 
+
+    @Column(nullable = true)
+    private String locality;
+
     public enum Gender {
         남성, 여성
     }

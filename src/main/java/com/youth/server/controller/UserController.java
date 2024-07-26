@@ -1,14 +1,14 @@
 package com.youth.server.controller;
 
 import com.youth.server.domain.User;
+import com.youth.server.dto.RestEntity;
 import com.youth.server.exception.PermissionDeniedException;
-import com.youth.server.service.UserService;
+import com.youth.server.repository.UserRepository;
 import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
     /**
      * 관리자 페이지 유저 전체 가져오기
@@ -35,7 +35,16 @@ public class UserController {
             throw new PermissionDeniedException("관리자만 이용 가능합니다.");
         }
 
-        return userService.getAllUsers();
+        return userRepository.findAll();
+    }
+
+    @GetMapping("{userId}")
+    public RestEntity getUserDetail(@PathVariable Integer userId){
+        return RestEntity.builder()
+                .put("user", userRepository.findById(userId))
+                .status(HttpStatus.OK)
+                .message("조회되었습니다.")
+                .build();
     }
 
 
