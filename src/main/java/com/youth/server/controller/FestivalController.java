@@ -2,6 +2,7 @@ package com.youth.server.controller;
 
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
+import com.youth.server.domain.User;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.SearchFestivalByFilterDTO;
 import com.youth.server.dto.festival.FestivalRequest;
@@ -14,13 +15,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Param 가져오는법
@@ -214,5 +213,56 @@ public class FestivalController {
                 .build();
     }
 
+    /**
+     * 찜목록에 추가
+     * @return
+     */
+    @PutMapping("{festivalId}/like")
+    public RestEntity addWishlist (@PathVariable(name="festivalId") Integer festivalId, @CookieValue(name = Const.AUTH_TOKEN_NAME) String token) {
+        String userId = jwtUtil.getValueOf(token, "userId");
 
+        User currentUser = userService.findByUserId(userId);
+        Festival currentFestival = festivalService.findFestivalById(festivalId);
+        RestEntity.RestEntityBuilder response = RestEntity.builder();
+
+        response.put("userId",currentUser.getUserId());
+
+        // 이미 추가되어있는 경우
+        if(currentFestival.getFavoriteUsers().contains(currentUser)){
+            currentFestival.getFavoriteUsers().remove(currentUser);
+            currentUser.getFavoriteFestivals().remove(currentFestival);
+
+            response.message("찜을 취소했습니다.");
+        }else{
+            currentFestival.getFavoriteUsers().add(currentUser);
+            currentUser.getFavoriteFestivals().add(currentFestival);
+            response.message("찜을 추가했습니다.");
+        }
+
+        festivalService.save(currentFestival);
+        userService.save(currentUser);
+
+        response.put("likeCount" , currentFestival.getFavoriteUsers().size());
+
+
+        return response.build();
+
+    }
+
+    /**
+     * 찜목록 조회
+     * /api/festival/:festivalId/like
+     *
+     */
+    @GetMapping("{festivalId}/like")
+    public RestEntity getFavoriteCount(@PathVariable("festivalId") Integer festivalId){
+        Set<User> favoriteUsers = festivalService.findFestivalById(festivalId).getFavoriteUsers();
+        return RestEntity.builder()
+                .status(HttpStatus.OK)
+                .put("likeCount", favoriteUsers.size())
+                .put("favoriteUser", favoriteUsers)
+                .message("조회되었습니다.")
+                .build();
+
+    }
 }

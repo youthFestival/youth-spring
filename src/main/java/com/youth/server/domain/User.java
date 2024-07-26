@@ -97,12 +97,7 @@ public class User {
     private Set<Comment> likedComments; // 좋아요 누른 댓글
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "UserFestival",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "festivalId")
-    )
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteUsers")
     @JsonIgnore
     private Set<Festival> favoriteFestivals; // 좋아요 누른 축제
 

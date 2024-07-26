@@ -70,7 +70,7 @@ public class CommentController {
     public RestEntity createComment(HttpServletRequest request, @RequestBody Map<String, String> payload) {
 
         User currentUser  = jwtUtil.getUserId(request)
-                .flatMap(userService::findByUserId)
+                .map(userService::findByUserId)
                 .orElseThrow(()-> new PermissionDeniedException("로그인이 필요합니다."));
 
         // 댓글 작성할 페스티벌 객체 가져오기

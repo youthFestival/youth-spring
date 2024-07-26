@@ -79,4 +79,8 @@ public class FestivalService {
     public Set<Booth> getBoothsById(int festivalId) {
         return findFestivalById(festivalId).getParticipatingBooths();
     }
+
+    public Festival save(Festival festival) {
+        return festivalRepository.save(festival);
+    }
 }

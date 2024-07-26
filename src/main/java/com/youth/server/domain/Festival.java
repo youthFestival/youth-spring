@@ -100,7 +100,8 @@ public class Festival {
     @JsonIgnore
     private Set<Booth> participatingBooths; // 축제에 참여하는 부스들
 
-    @ManyToMany(fetch = FetchType.LAZY , mappedBy = "favoriteFestivals")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "FestivalUser", joinColumns = @JoinColumn(name = "festivalId"), inverseJoinColumns = @JoinColumn(name = "userId"))
     @JsonIgnore
     private Set<User> favoriteUsers; // 좋아요 누른 사용자들
 
