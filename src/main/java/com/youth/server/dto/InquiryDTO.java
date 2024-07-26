@@ -9,4 +9,6 @@ public class InquiryDTO {
     private String content;
     private boolean isSecret;
     private Integer festivalId;
+    private Integer userUid;
+    private String username;
 }

@@ -1,6 +1,7 @@
 package com.youth.server.service;
 
 import com.youth.server.domain.Comment;
+import com.youth.server.dto.CommentDTO;
 import com.youth.server.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class CommentService {
     private final CommentRepository commentRepository;
 
-    public Set<Comment> getCommentsByFestivalId(int festivalId, PageRequest of) {
+    public Set<CommentDTO> getCommentsByFestivalId(int festivalId, PageRequest of) {
         return commentRepository.findAllByFestivalId(festivalId, of);
     }
 

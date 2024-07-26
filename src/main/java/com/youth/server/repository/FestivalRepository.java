@@ -36,9 +36,9 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
 
     @Query("""
         SELECT new com.youth.server.dto.SearchFestivalByFilterDTO(
-           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl) ,f.viewCount,f.ticketOpen , COUNT(u.id)
+           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl) ,f.viewCount,f.ticketOpen , COUNT(u.id), f.geolocation.name, f.geolocation.detail
         )
-        From Festival f join f.images i
+        From Festival f left join f.images i
         left join f.favoriteUsers u
         where
         (:#{#data.search} IS NULL OR f.name LIKE %:#{#data.search}%) AND
@@ -47,7 +47,7 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
         (:#{#data.isOngoing} IS NULL OR (
             f.startDate <= CURRENT_DATE() AND f.endDate >= CURRENT_DATE()
         ))
-        GROUP BY f.id, f.name, f.startDate, f.endDate, f.locality, f.viewCount, f.ticketOpen
+        GROUP BY f.id
         ORDER BY f.id
    
 

@@ -26,6 +26,9 @@ public class Geolocation {
     @Column(nullable = true)
     private Float longitude; // 경도
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(length = 255, nullable = true)
     private String detail; // 주소 디테일
 }

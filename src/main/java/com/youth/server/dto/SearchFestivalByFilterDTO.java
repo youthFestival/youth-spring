@@ -18,8 +18,11 @@ public class SearchFestivalByFilterDTO {
     private LocalDateTime ticketOpen;
     private boolean isFavorite;
     private int favoriteUserCount;
+    private String geoLocationName;
+    private String geoLocationDetail;
 
-    public SearchFestivalByFilterDTO(int id,String festivalName, LocalDateTime startDate, LocalDateTime endDate, String locationName, String festivalThumbnail, int viewCount, LocalDateTime ticketOpen, long favoriteUserCount) {
+
+    public SearchFestivalByFilterDTO(int id,String festivalName, LocalDateTime startDate, LocalDateTime endDate, String locationName, String festivalThumbnail, int viewCount, LocalDateTime ticketOpen, long favoriteUserCount, String geoLocationName, String geoLocationDetail) {
         this.id = id;
         this.festivalName = festivalName;
         this.startDate = startDate;
@@ -30,6 +33,8 @@ public class SearchFestivalByFilterDTO {
         this.ticketOpen = ticketOpen;
         this.isFavorite = false;
         this.favoriteUserCount = (int) favoriteUserCount;
+        this.geoLocationDetail = geoLocationDetail;
+        this.geoLocationName = geoLocationName;
     }
 
 }

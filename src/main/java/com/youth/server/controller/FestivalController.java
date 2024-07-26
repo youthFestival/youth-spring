@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Param 가져오는법
@@ -89,26 +88,7 @@ public class FestivalController {
         Comparator<SearchFestivalByFilterDTO> comparator = null;
 
     // 정렬
-        if (sortBy != null) {
-            filteredFestivals.sort(
-                    switch (sortBy) {
-                        case "interest" ->
-                                Comparator.comparing(SearchFestivalByFilterDTO::getFavoriteUserCount).reversed();
-                        case "recent" -> Comparator.comparing(SearchFestivalByFilterDTO::getStartDate);
-                        case "distance" -> Comparator.comparing(SearchFestivalByFilterDTO::getLocationName);
-                        case "reservation" -> comparator = Comparator.comparing(SearchFestivalByFilterDTO::getTicketOpen, Comparator.nullsLast(Comparator.naturalOrder()));
-                        default -> Comparator.comparing(SearchFestivalByFilterDTO::getId); // 기본 정렬 기준
-                    });
-
-            if (comparator != null) {
-                filteredFestivals.stream()
-                        .filter(f -> f.getTicketOpen() != null) // 널 값 필터링
-                        .sorted(comparator)
-                        .collect(Collectors.toList());
-            }
-
-        }
-
+//        @TODO 정렬
 
 
         filteredFestivals.forEach(festival -> {
@@ -131,7 +111,7 @@ public class FestivalController {
         Festival festival = festivalService.findFestivalById(festivalId);
 
         Optional<String> festivalThumbnail = festival.getImages().stream()
-                .filter(image -> image.getCategory().equals(Image.Category.포스터))
+                .filter(image -> image.getCategory().equals(Image.Category.썸네일))
                 .map(Image::getImgUrl)
                 .findFirst();
 
@@ -151,7 +131,7 @@ public class FestivalController {
                 .put("minAge", festival.getMinAge())
                 .put("tel",festival.getTel())
                 .put("organizerUrl", festival.getOrganizerUrl())
-                .put("geoLocation", festival.getGeoLocationId())
+                .put("geoLocation", festival.getGeolocation())
                 .build();
     }
 

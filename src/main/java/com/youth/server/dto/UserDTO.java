@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
  * address	String	거주지
  * tel	String	전화번호
  * isAllowEmail	Boolean	메일 수신 동의 여부
+ * locality 사용자 지역
  */
 @Data
 @NoArgsConstructor
@@ -26,4 +27,5 @@ public class UserDTO {
     private String address;
     private String tel;
     private Boolean isAllowEmail;
+    private String locality;
 }

@@ -35,8 +35,11 @@ public class Inquiry {
 
     @JoinColumn(name="authorId")
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User author; // 작성자 ID
+
+    @Transient
+    private String username;
 
     @NonNull
     @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -50,7 +53,7 @@ public class Inquiry {
     private boolean isSecret; // 비밀글 여부
 
     @Column(nullable = true)
-    private int festivalId; //  축제 ID
+    private Integer festivalId; //  축제 ID
 
     public enum Category {
         질문, 기타, 답변
@@ -65,4 +68,9 @@ public class Inquiry {
     @JoinColumn(name="replyId")
     @OneToOne(fetch = FetchType.EAGER)
     private Inquiry reply;
+
+    @PostLoad
+    public void initUsername(){
+        this.username = author.getUserId();
+    }
 }

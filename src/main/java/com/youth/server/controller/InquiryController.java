@@ -121,11 +121,11 @@ public class InquiryController {
      * 문의글 상세보기
      */
 
-    @GetMapping("/{inquiryId}")
-    public RestEntity getDetailOfInquiry(@PathVariable int inquiryId) {
+    @GetMapping("/detail/{inquiryId}")
+    public RestEntity getDetailOfInquiry(@PathVariable(required = false) int inquiryId) {
         return RestEntity.builder()
                 .message("조회되었습니다.")
-                .put("inquiry",inquiryId)
+                .put("inquiry", "zz")
                 .status(HttpStatus.OK)
                 .build();
     }

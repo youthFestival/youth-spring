@@ -36,6 +36,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
+    @JsonIgnore
     private User author; // 작성자 아이디
 
     @Column
