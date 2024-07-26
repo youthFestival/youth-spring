@@ -2,6 +2,7 @@ spring:
     application:
         name: youth-spring
 
+
     datasource:
         url: jdbc:mysql://43.201.1.223:3306/youth?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
         driver-class-name: com.mysql.cj.jdbc.Driver
