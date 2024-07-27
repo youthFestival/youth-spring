@@ -145,4 +145,34 @@ public class AuthController {
      * 연동회원 가입
      *  인증 후, 비밀번호 변경
      */
+    @GetMapping("/kakao")
+    public RestEntity kakaoCallback(@RequestParam(name = "code") String code) {
+        // TODO : Kakao API로 code 받아서 access token 받아서 user_id, email, nickname, profile_image_url 받아서 DB에 insert
+        // user_id, email, nickname, profile_image_url, access_token, refresh_token, is_kakao, is_admin, is_allow_email, created_at, updated_at
+        String access_token;
+        try {
+            access_token = authService.getKakaoAccessToken(code);
+        } catch (Exception e) {
+            return RestEntity.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message("Failed to retrieve access token from Kakao")
+                    .put("error", e.getMessage())
+                    .build();
+        }
+        UserDTO userDTO;
+        try {
+            userDTO = authService.kakaoLogin(access_token);
+        } catch (Exception e) {
+            return RestEntity.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message("Failed to log in with Kakao")
+                    .put("error", e.getMessage())
+                    .build();
+        }
+        return RestEntity.builder()
+                .status(HttpStatus.OK)
+                .message("Kakao login successful")
+                .put("user", userDTO)
+                .build();
+    }
 }
