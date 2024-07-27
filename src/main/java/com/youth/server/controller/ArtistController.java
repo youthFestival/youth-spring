@@ -29,7 +29,11 @@ public class ArtistController {
         List<Artist> artists = null ;
 
 
-        if(uid == null){
+        if(uid == null && search == null) {
+            artists = artistRepository.findAll();
+        }
+
+        else if(uid == null){
             artists = artistRepository.findAllByNameContains(search);
         }
 
@@ -38,7 +42,6 @@ public class ArtistController {
                     .getFavoriteArtists()
                     .stream().filter(artist -> {
                 if(search == null){
-                    System.out.println("써치가 널인데-수");
                     return  true;
                 }
                 return artist.getName().contains(search);
