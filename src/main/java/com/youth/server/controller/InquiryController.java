@@ -6,8 +6,10 @@ import com.youth.server.dto.InquiryDTO;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.repository.InquiryRepository;
+import com.youth.server.repository.UserRepository;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
+import com.youth.server.util.ObjectUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class InquiryController {
 
     private final InquiryRepository inquiryRepository;
+    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
     /**
@@ -122,22 +126,77 @@ public class InquiryController {
      */
 
     @GetMapping("/detail/{inquiryId}")
-    public RestEntity getDetailOfInquiry(@PathVariable(required = false) int inquiryId) {
+    public RestEntity getDetailOfInquiry(@PathVariable(required = true, name = "inquiryId") int inquiryId) {
+        Optional<Inquiry> inquiry = inquiryRepository.findById(inquiryId);
+
+        inquiry.orElseThrow(() -> new NotFoundException("해당 문의글이 존재하지 않습니다."));
+
+
         return RestEntity.builder()
                 .message("조회되었습니다.")
-                .put("inquiry", "zz")
+                .put("inquiry", inquiry)
                 .status(HttpStatus.OK)
                 .build();
     }
 
     @PostMapping
     public RestEntity createInquiry(HttpServletRequest request,
-                                    @RequestBody InquiryDTO newInquiry) {
+                                    @RequestBody HashMap<String,String> payload) {
 
-        // @TODO 권한 확인
-        Optional<String> username  = jwtUtil.getUserId(request);
+        Integer uid = jwtUtil.getUid(request).orElseThrow(()->new NotFoundException("로그인 후 이용해주세요."));
 
-        return RestEntity.builder().build();
+        Inquiry.Category category;
+        Inquiry.Status status;
+
+        String replyId = payload.get("replyId");
+        String title = payload.get("title");
+        String content = payload.get("content");
+        String festivalId = payload.get("festivalId");
+        String isSecret = payload.get("isSecret");
+
+        Inquiry questionInquiry = null;
+
+
+        if(replyId == null){
+            category = Inquiry.Category.질문;
+            status = Inquiry.Status.접수중;
+        }else{
+            questionInquiry = inquiryRepository.findById(Integer.parseInt(replyId)).orElseThrow(()->new NotFoundException("답변달 게시글이 존재하지 않습니다."));
+            category = Inquiry.Category.답변;
+            status = Inquiry.Status.답변완료;
+        }
+
+        Inquiry inquiry = Inquiry.builder()
+                .title(title)
+                .content(content)
+                .category(category)
+                .status(status)
+                .isSecret(isSecret != null && isSecret.equals("true"))
+                .author(userRepository.findById(uid).orElseThrow(()->new NotFoundException("해당 유저가 존재하지 않습니다.")))
+                .build();
+
+        // 페스티벌 아이디가 있을 경우
+        if(festivalId != null)
+        {
+            inquiry.setFestivalId(Integer.valueOf(festivalId));
+        }
+
+
+        // 답변글일 경우
+        if(questionInquiry != null) {
+            inquiry.setStatus(Inquiry.Status.답변완료);
+            inquiryRepository.save(inquiry);
+
+            questionInquiry.setReply(inquiry);
+            inquiryRepository.save(questionInquiry);
+        }else{
+            inquiryRepository.save(inquiry);
+        }
+
+
+        jwtUtil.getUserId(request);
+
+        return RestEntity.builder().message("정상적으로 등록되었습니다").build();
     }
 
 

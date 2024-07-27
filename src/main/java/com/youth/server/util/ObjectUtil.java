@@ -7,7 +7,7 @@ import java.util.Map;
 public class ObjectUtil {
 
 
-    public static Map<?,?> toMap(Object obj) {
+    public static Map toMap(Object obj) {
         return new ObjectMapper().convertValue(obj,Map.class);
     }
 }

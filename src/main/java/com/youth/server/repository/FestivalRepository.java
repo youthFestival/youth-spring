@@ -36,22 +36,25 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
 
     @Query("""
         SELECT new com.youth.server.dto.SearchFestivalByFilterDTO(
-           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl) ,f.viewCount,f.ticketOpen , COUNT(u.id), f.geolocation.name, f.geolocation.detail
+           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl), 
+           f.viewCount, f.ticketOpen, COUNT(u.id), 
+           COALESCE(f.geolocation.name, '위치 정보가 존재하지 않습니다.'), 
+           COALESCE(f.geolocation.detail, '위치 설명이 존재하지 않습니다')
         )
-        From Festival f left join f.images i
-        left join f.favoriteUsers u
-        where
+        FROM Festival f 
+        LEFT JOIN f.images i 
+        LEFT JOIN f.favoriteUsers u 
+        LEFT JOIN f.geolocation g
+        WHERE
         (:#{#data.search} IS NULL OR f.name LIKE %:#{#data.search}%) AND
         (:#{#data.locality} IS NULL OR f.locality = :#{#data.locality}) AND
         (:#{#data.category} IS NULL OR f.category = :#{#data.getCategory()}) AND
         (:#{#data.isOngoing} IS NULL OR (
-            f.startDate <= CURRENT_DATE() AND f.endDate >= CURRENT_DATE()
+            f.startDate <= CURRENT_DATE AND f.endDate >= CURRENT_DATE
         ))
-        GROUP BY f.id
+        GROUP BY f.id, f.name, f.startDate, f.endDate, f.locality, f.viewCount, f.ticketOpen, f.geolocation.name, f.geolocation.detail
         ORDER BY f.id
-   
-
-""")
+        """)
     List<SearchFestivalByFilterDTO> findFestivalByDTO(@Param("data")FestivalRequest data, PageRequest of);
 
 

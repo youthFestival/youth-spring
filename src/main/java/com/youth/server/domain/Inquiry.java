@@ -3,6 +3,9 @@ package com.youth.server.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -13,16 +16,18 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class Inquiry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // 기본 키, 자동 증가
 
-    @NonNull
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "enum('페스티벌','계정')")
+    @NonNull
+    @Column(nullable = false, columnDefinition = "enum('질문','답변')")
     private Category category; // 문의 카테고리
 
     @NonNull
@@ -34,15 +39,14 @@ public class Inquiry {
     private String content; // 내용
 
     @JoinColumn(name="authorId")
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User author; // 작성자 ID
 
     @Transient
     private String username;
 
-    @NonNull
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column
+    @CurrentTimestamp
     private LocalDateTime updatedAt; // 작성 일시(답변 일시)
 
     @Enumerated(EnumType.STRING)
@@ -51,9 +55,6 @@ public class Inquiry {
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isSecret; // 비밀글 여부
-
-    @Column(nullable = true)
-    private Integer festivalId; //  축제 ID
 
     public enum Category {
         질문, 기타, 답변
@@ -69,8 +70,24 @@ public class Inquiry {
     @OneToOne(fetch = FetchType.EAGER)
     private Inquiry reply;
 
+    @JoinColumn(name="festivalId", nullable = true)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Festival festival;
+
+    @Transient
+    private Integer festivalId;
+
+    @Transient
+    private String festivalName;
+
     @PostLoad
-    public void initUsername(){
+    private void setFestivalDetails() {
+        if (festival != null) {
+            this.festivalId = festival.getId();
+            this.festivalName = festival.getName();
+        }
         this.username = author.getUserId();
     }
+
 }

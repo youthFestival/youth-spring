@@ -48,7 +48,7 @@ public class FestivalService {
 
         participatingArtists.stream()
                 .forEach(artist -> {
-                    Image artistProfileUrl = artist.getArtistProfileImage();
+                    Image artistProfileUrl = artist.getImage();
 
                     // artistProfileUrl가 null이면 return
                     if(artistProfileUrl == null) {
@@ -68,8 +68,8 @@ public class FestivalService {
         return festivalRepository.findAllByFavoriteUserId(uid);
     }
 
-    public List<SearchFestivalByFilterDTO> findFestival(FestivalRequest data, PageRequest of) {
-        return festivalRepository.findFestivalByDTO(data, of);
+    public List<SearchFestivalByFilterDTO> findFestival(FestivalRequest filter, PageRequest of) {
+        return festivalRepository.findFestivalByDTO(filter, of);
     }
 
     public List<Festival> findTop3ByRecommendFestival() {
