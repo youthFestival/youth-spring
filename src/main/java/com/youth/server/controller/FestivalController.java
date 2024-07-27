@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -64,7 +63,7 @@ public class FestivalController {
                                    @RequestParam(name= "isOngoing", required = false) Boolean isOngoing,
                                    HttpServletRequest request
     ){
-        FestivalRequest data = FestivalRequest.builder().limit(limit).offset(offset).sortBy(sortBy).locality(locality).category(category).search(search).isFavorite(isFavorite).build();
+        FestivalRequest filter = FestivalRequest.builder().limit(limit).offset(offset).sortBy(sortBy).locality(locality).category(category).search(search).isFavorite(isFavorite).build();
 
 
         // 로그인 여부 확인 (isFavorite)
@@ -79,11 +78,11 @@ public class FestivalController {
 
         // 검색 조건에 맞는 축제 조회
         PageRequest pageRequest = PageRequest.of(
-                data.getOffset() == 0 ? 0 :
-                        data.getOffset() / data.getLimit()
-        , data.getLimit());
+                filter.getOffset() == 0 ? 0 :
+                        filter.getOffset() / filter.getLimit()
+        , filter.getLimit());
 
-        List<SearchFestivalByFilterDTO> filteredFestivals = festivalService.findFestival(data,pageRequest);
+        List<SearchFestivalByFilterDTO> filteredFestivals = festivalService.findFestival(filter,pageRequest);
         Comparator<SearchFestivalByFilterDTO> comparator = null;
 
     // 정렬
