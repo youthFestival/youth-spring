@@ -40,7 +40,7 @@ public class Image {
     @JsonIgnore
     private Set<Festival> festivals;
 
-    @OneToOne(mappedBy = "artistProfileImage", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "image", fetch = FetchType.LAZY)
     @JsonIgnore
     private Artist artists;
 

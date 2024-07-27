@@ -1,5 +1,6 @@
 package com.youth.server.repository;
 
+import com.youth.server.domain.Artist;
 import com.youth.server.domain.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUserId(@Param("userId") String userId);
 
     Optional<User> findByUsernameAndEmail(String username, String email);
+
 }

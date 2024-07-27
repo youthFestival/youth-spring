@@ -48,7 +48,7 @@ public class FestivalService {
 
         participatingArtists.stream()
                 .forEach(artist -> {
-                    Image artistProfileUrl = artist.getArtistProfileImage();
+                    Image artistProfileUrl = artist.getImage();
 
                     // artistProfileUrl가 null이면 return
                     if(artistProfileUrl == null) {

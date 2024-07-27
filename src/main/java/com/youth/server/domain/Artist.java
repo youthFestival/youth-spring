@@ -25,9 +25,8 @@ public class Artist {
     private String name; // 가수 이름
 
     @JoinColumn(name = "imageId", nullable = true)
-    @OneToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Image artistProfileImage;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Image image;
 
     @ManyToMany(mappedBy = "favoriteArtists", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -36,4 +35,12 @@ public class Artist {
     @ManyToMany(mappedBy = "participatingArtists", fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Festival> participatingFestivals; // 참가하는 축제 목록
+
+//    @Transient
+//    private String imgUrl;
+//
+//    @PostLoad
+//    public void setImgUrl(){
+//        this.imgUrl = artistProfileImage.getImgUrl();
+//    }
 }

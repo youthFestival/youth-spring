@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -84,7 +85,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "artistId")
     )
     @JsonIgnore
-    private Set<Artist> favoriteArtists; // 좋아요 누른 아티스트
+    private List<Artist> favoriteArtists; // 좋아요 누른 아티스트
 
 
     @ManyToMany(fetch = FetchType.LAZY)
