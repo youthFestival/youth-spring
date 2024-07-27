@@ -97,7 +97,7 @@ public class AuthController {
         boolean isDup = authService.checkUserIdDuplication(userId);
 
         return RestEntity.builder()
-                .status(isDup ? HttpStatus.OK : HttpStatus.CONFLICT)
+                .status(isDup ? HttpStatus.CONFLICT : HttpStatus.OK)
                 .message(isDup ? "이미 사용중인 아이디입니다." : "사용 가능한 아이디입니다.")
                 .put("duplicate", isDup)
                 .build();
