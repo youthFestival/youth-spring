@@ -46,4 +46,10 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(BusinessLogicException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessLogicException(BusinessLogicException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -1,11 +1,13 @@
 package com.youth.server.controller;
 
 import com.youth.server.domain.User;
+import com.youth.server.dto.EmailVerificationResult;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.UserDTO;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.repository.UserRepository;
 import com.youth.server.service.AuthService;
+import com.youth.server.service.UserService;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -25,6 +27,7 @@ public class AuthController {
     private final AuthService authService;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @PostMapping("/login")
     public RestEntity login(HttpServletResponse response, @RequestBody Map<String, String> credentials) {
@@ -180,6 +183,50 @@ public class AuthController {
                 .message("계정을 찾았습니다.")
                 .put("userId", user.get().getUserId())
                 .build();
+    }
+
+    /*
+    * 이메일 인증
+    * */
+    @PostMapping("/reset-password-email-send")
+    public RestEntity sendResetPasswordEmail(@RequestBody Map<String, String> payload) {
+        String userId = payload.getOrDefault("userId", "");
+        String email = payload.getOrDefault("email", "");
+
+        if(userId.isEmpty() || email.isEmpty()){
+            throw new IllegalArgumentException("성함 또는 이메일을 확인해주세요.");
+        }
+
+        Optional<User> user = authService.findByEmailAndUserId(email, userId);
+
+        if(user.isEmpty()){
+            throw new NotFoundException("일치하는 계정이 없습니다.");
+        }
+
+        userService.sendCodeToEmail(email);
+
+        return RestEntity.builder()
+                .status(HttpStatus.OK)
+                .message("인증번호를 발송했습니다")
+                .build();
+    }
+
+    @GetMapping("/email-verification-request")
+    public RestEntity sendEmailVerificationRequest(@RequestParam(name = "email") String email, @RequestParam(name = "code") String authCode) {
+        EmailVerificationResult response = userService.verifiedCode(email, authCode);
+
+        if (response.isSuccess()) {
+            return RestEntity.builder()
+                    .status(HttpStatus.OK)
+                    .message("인증이 완료되었습니다")
+                    .put("redirectUrl", "/change-password?email=" + email)
+                    .build();
+        } else {
+            return RestEntity.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("인증에 실패하였습니다")
+                    .build();
+        }
     }
 
     /**

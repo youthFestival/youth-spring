@@ -145,4 +145,8 @@ public class AuthService {
                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                .block();
     }
+
+    public Optional<User> findByEmailAndUserId(String email, String userId) {
+        return userRepository.findByEmailAndUserId(email, userId);
+    }
 }

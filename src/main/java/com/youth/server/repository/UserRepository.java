@@ -1,6 +1,5 @@
 package com.youth.server.repository;
 
-import com.youth.server.domain.Artist;
 import com.youth.server.domain.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.userId = :userId")
     Optional<User> findByUserId(@Param("userId") String userId);
 
-    Optional<User> findByUsernameAndEmail(String username, String email);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByEmailAndUserId(String email, String userId);
 
+    Optional<User> findByUsernameAndEmail(String username, String email);
 }
