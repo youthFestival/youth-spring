@@ -4,6 +4,7 @@ import com.youth.server.domain.User;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.UserDTO;
 import com.youth.server.exception.NotFoundException;
+import com.youth.server.repository.UserRepository;
 import com.youth.server.service.AuthService;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
@@ -112,12 +114,48 @@ public class AuthController {
     /**
      * 연동 회원가입
      */
-//    @PostMapping("/sns-login") // @TODO : 연동 로그인
-//    public void snsLogin(@RequestBody Map<String, String> snsInfo) {
-//        String provider = snsInfo.getOrDefault("provider", "");
-//        String token = snsInfo.getOrDefault("token", "");
-//
-//    }
+    @PostMapping("/kakao-login") //
+    public RestEntity snsLogin(HttpServletResponse response,@RequestBody Map<String, String> payload) {
+        String userId = payload.get("id");
+        String profileName = payload.get("profileName");
+
+        Optional<User> user = userRepository.findByUserId(userId);
+
+        // 유저가 없을경우 회원가입
+        if(user.isEmpty()){
+            user = Optional.of(authService.join(User.builder()
+                    .userId(userId)
+                    .username(profileName)
+                    .password("새 비밀번호를 입력해주세요.")
+                    .email("새 이메일 정보를 등록해주세요.")
+                    .username(profileName)
+                    .address("새 주소를 입력해주세요.")
+                    .locality("서울")
+                    .gender(User.Gender.남성)
+                    .isAdmin(User.Role.user)
+                    .build()));
+        }
+
+        // 유저가 있을경우
+        user.ifPresent((loggedInUser)->{
+            Cookie jwtCookie = new Cookie(Const.AUTH_TOKEN_NAME, jwtUtil.createAccessToken(Map.of(
+                    "id",String.valueOf(loggedInUser.getId()),
+                    "userId", loggedInUser.getUserId(),
+                    "role", loggedInUser.getIsAdmin().toString())));
+
+            jwtCookie.setMaxAge(30 * 60); // 30분
+            jwtCookie.setPath("/");
+            jwtCookie.setAttribute("sameSite", "Lax");
+
+            response.addCookie(jwtCookie);
+        });
+
+            return RestEntity.builder()
+                    .message("로그인되었습니다.")
+                    .put("user", user.get())
+                    .status(HttpStatus.OK)
+                    .build();
+        }
 
     /**
      *  계정 찾기
