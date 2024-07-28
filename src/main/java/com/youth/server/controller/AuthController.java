@@ -1,10 +1,11 @@
 package com.youth.server.controller;
 
 import com.youth.server.domain.User;
-import com.youth.server.dto.EmailVerificationResult;
+//import com.youth.server.dto.EmailVerificationResult;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.UserDTO;
 import com.youth.server.exception.NotFoundException;
+import com.youth.server.repository.EmailVerificationTokenRepository;
 import com.youth.server.repository.UserRepository;
 import com.youth.server.service.AuthService;
 import com.youth.server.service.UserService;
@@ -13,10 +14,12 @@ import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +31,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
 
     @PostMapping("/login")
     public RestEntity login(HttpServletResponse response, @RequestBody Map<String, String> credentials) {
@@ -190,6 +194,10 @@ public class AuthController {
     * */
     @PostMapping("/reset-password-email-send")
     public RestEntity sendResetPasswordEmail(@RequestBody Map<String, String> payload) {
+        emailVerificationTokenRepository.deleteAllByExpiresAtBefore(LocalDateTime.now()); // 만료된 토큰 삭제
+        // 유저 아이디에 해당하는 이미 생성된 토큰 삭제
+
+
         String userId = payload.getOrDefault("userId", "");
         String email = payload.getOrDefault("email", "");
 
@@ -203,6 +211,9 @@ public class AuthController {
             throw new NotFoundException("일치하는 계정이 없습니다.");
         }
 
+        emailVerificationTokenRepository.deleteAllByUserId(user.get().getId()); // 이미 생성된 토큰 삭제
+
+
         userService.sendCodeToEmail(email);
 
         return RestEntity.builder()
@@ -213,9 +224,9 @@ public class AuthController {
 
     @GetMapping("/email-verification-request")
     public RestEntity sendEmailVerificationRequest(@RequestParam(name = "email") String email, @RequestParam(name = "code") String authCode) {
-        EmailVerificationResult response = userService.verifiedCode(email, authCode);
+        boolean isVerified = userService.verifiedCode(email, authCode); // 인증번호 확인
 
-        if (response.isSuccess()) {
+        if (isVerified) {
             return RestEntity.builder()
                     .status(HttpStatus.OK)
                     .message("인증이 완료되었습니다")
@@ -264,5 +275,14 @@ public class AuthController {
                 .message("Kakao login successful")
                 .put("user", userDTO)
                 .build();
+    }
+
+
+    @Transactional
+    /**
+     * 만료된 토큰 삭제
+     */
+    public void removeExpiredToken() {
+        emailVerificationTokenRepository.deleteAllByExpiresAtBefore(LocalDateTime.now());
     }
 }

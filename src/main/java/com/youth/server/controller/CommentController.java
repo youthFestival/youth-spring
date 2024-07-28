@@ -55,13 +55,13 @@ public class CommentController {
     @GetMapping("/my-comment")
     public RestEntity getMyComments(HttpServletRequest request) {
 
-        Optional<String> currentUserId = jwtUtil.getUserId(request);
+        Optional<Integer> currentUserId = jwtUtil.getUid(request);
         if (currentUserId.isEmpty()) throw new PermissionDeniedException("로그인이 필요합니다.");
 
         return RestEntity.builder()
                 .status(HttpStatus.OK)
                 .message("댓글 조회 성공")
-                .put("comments", commentService.getCommentsByUserId(currentUserId.map(Integer::parseInt).get()))
+                .put("comments", commentService.getCommentsByUserId(currentUserId.get()))
                 .build();
     }
 
