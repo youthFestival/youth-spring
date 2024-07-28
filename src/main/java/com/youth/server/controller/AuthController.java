@@ -8,6 +8,7 @@ import com.youth.server.service.AuthService;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,11 +37,9 @@ public class AuthController {
                 "role", loggedInUser.getIsAdmin().toString()
         )) );
 
-        jwtCookie.setMaxAge(60*30*100000);//30분
+        jwtCookie.setMaxAge(30 * 60); // 30분
         jwtCookie.setPath("/");
-        jwtCookie.setHttpOnly(true);
-        jwtCookie.setAttribute("sameSite", "none");
-        jwtCookie.setSecure(true); // https 를 통해서만 쿠키를 주고받을 수 있도록 설정
+        jwtCookie.setAttribute("sameSite", "Lax");
         response.addCookie(jwtCookie);
 
         return RestEntity.builder().
@@ -53,14 +52,20 @@ public class AuthController {
     /**
      * 로그아웃
      */
-    @GetMapping("/logout")
-    public RestEntity logout(HttpServletResponse response) {
-        Cookie jwtCookie = new Cookie(Const.AUTH_TOKEN_NAME, null);
-        jwtCookie.setMaxAge(0);
-        jwtCookie.setSecure(false);//https 를 통해서만 쿠키를 주고받을 수 있도록 설정
-
-        response.addCookie(jwtCookie);
-
+    @GetMapping ("/logout")
+    public RestEntity logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(Const.AUTH_TOKEN_NAME)) {
+                    cookie.setValue("");
+                    cookie.setPath("/"); // 쿠키 생성 시 설정한 path와 동일하게 설정
+                    cookie.setMaxAge(0);
+                    cookie.setAttribute("sameSite", "Lax"); // 쿠키 생성 시 설정한 속성과 동일하게 설정
+                    response.addCookie(cookie);
+                }
+            }
+        }
         return RestEntity.builder()
                 .put("status", "success")
                 .put("message", "로그아웃되었습니다.")
