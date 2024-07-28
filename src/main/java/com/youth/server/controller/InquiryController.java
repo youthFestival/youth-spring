@@ -1,10 +1,12 @@
 package com.youth.server.controller;
 
 
+import com.youth.server.domain.Festival;
 import com.youth.server.domain.Inquiry;
 import com.youth.server.dto.InquiryDTO;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.exception.NotFoundException;
+import com.youth.server.repository.FestivalRepository;
 import com.youth.server.repository.InquiryRepository;
 import com.youth.server.repository.UserRepository;
 import com.youth.server.util.Const;
@@ -29,6 +31,7 @@ public class InquiryController {
     private final InquiryRepository inquiryRepository;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final FestivalRepository festivalRepository;
 
     /**
      * 내 문의 글 또는 해당 유저 가져오기
@@ -178,7 +181,9 @@ public class InquiryController {
         // 페스티벌 아이디가 있을 경우
         if(festivalId != null)
         {
-            inquiry.setFestivalId(Integer.valueOf(festivalId));
+            inquiry.setFestival(festivalRepository.findFestivalById(Integer.valueOf(festivalId)).orElseThrow(
+                    ()->new NotFoundException("페스티벌이 존재하지 않습니다. 입력 페스티벌 아이디 : "+ festivalId )
+            ));
         }
 
 
