@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class UserController {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     /**
      * 관리자 페이지 유저 전체 가져오기
      * Permission admin
@@ -66,10 +67,34 @@ public class UserController {
 
         User user = userRepository.findById(uid).orElseThrow(()-> new NotFoundException("존재하지 않는 유저입니다."));
 
+        String userId, username, email, gender, address, tel, locality, password, isAllowEmail;
+
+        userId = payload.get("userId");
+        username = payload.get("username");
+        email = payload.get("email");
+        gender = payload.get("gender");
+        address = payload.get("address");
+        tel = payload.get("tel");
+        locality = payload.get("locality");
+        password = payload.get("password");
+//        isAllowEmail = payload.get("isAllowEmail");
+
+        if(userId != null) user.setUserId(userId);
+        if(username != null) user.setUsername(username);
+        if(email != null) user.setEmail(email);
+        if(gender != null) user.setGender(gender.equals("남성") ? User.Gender.남성 : User.Gender.여성 );
+        if(address != null) user.setAddress(address);
+        if(tel != null) user.setTel(tel);
+        if(locality != null) user.setLocality(locality);
+        if(password != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+//        if(isAllowEmail != null) user.setAllowEmail(Boolean.parseBoolean(isAllowEmail));
 
 
 
         userRepository.save(user);
+
         return RestEntity.builder()
                 .status(HttpStatus.OK)
                 .message("수정되었습니다.")
