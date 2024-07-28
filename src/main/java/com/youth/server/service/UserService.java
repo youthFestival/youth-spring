@@ -50,7 +50,7 @@ public class UserService {
 
     public void sendCodeToEmail(String toEmail) {
         this.checkDuplicatedEmail(toEmail);
-        String title = "Travel with me 이메일 인증 번호";
+        String title = "youth 이메일 인증 번호";
         String authCode = this.createCode();
         mailService.sendEmail(toEmail, title, authCode);
         // 이메일 인증 요청 시 인증 번호 Redis에 저장 ( key = "AuthCode " + Email / value = AuthCode )
