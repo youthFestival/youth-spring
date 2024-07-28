@@ -188,20 +188,20 @@ public class FestivalController {
 
 
     // 주변 축제 추천
-    @GetMapping("{festivalId}/recommendations")
-    public RestEntity getRecommendFestival(@PathVariable(name="festivalId") int festivalId,
-                                           @RequestParam(name="limit", required = false, defaultValue = "3") int limit,
-                                           HttpServletRequest request
-
-    ){
-
-
-        return RestEntity.builder()
-                .status(HttpStatus.CREATED)
-                .message("조회되었습니다.")
-                .put("recommendFestivals", festivalService.findTop3ByRecommendFestival())
-                .build();
-    }
+//    @GetMapping("{festivalId}/recommendations")
+//    public RestEntity getRecommendFestival(@PathVariable(name="festivalId") int festivalId,
+//                                           @RequestParam(name="limit", required = false, defaultValue = "3") int limit,
+//                                           HttpServletRequest request
+//
+//    ){
+//
+//
+//        return RestEntity.builder()
+//                .status(HttpStatus.CREATED)
+//                .message("조회되었습니다.")
+//                .put("recommendFestivals", festivalService.findTop3ByRecommendFestival())
+//                .build();
+//    }
 
     // 부스가져오기
     @GetMapping("{festivalId}/booths")
@@ -264,5 +264,14 @@ public class FestivalController {
                 .message("조회되었습니다.")
                 .build();
 
+    }
+
+    @GetMapping("/locality")
+    public RestEntity getFestivalLocality(){
+        return RestEntity.builder()
+                .status(HttpStatus.OK)
+                .put("locality", festivalService.getFestivalLocality())
+                .message("조회되었습니다.")
+                .build();
     }
 }

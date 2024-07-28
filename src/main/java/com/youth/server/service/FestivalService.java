@@ -4,6 +4,7 @@ import com.youth.server.domain.Artist;
 import com.youth.server.domain.Booth;
 import com.youth.server.domain.Festival;
 import com.youth.server.domain.Image;
+import com.youth.server.dto.FestivalLocalityDTO;
 import com.youth.server.dto.SearchFestivalByFilterDTO;
 import com.youth.server.dto.festival.FestivalRequest;
 import com.youth.server.dto.festival.LineUpDTO;
@@ -72,9 +73,6 @@ public class FestivalService {
         return festivalRepository.findFestivalByDTO(filter, of);
     }
 
-    public List<Festival> findTop3ByRecommendFestival() {
-        return festivalRepository.findTop3(PageRequest.of(0,3));
-    }
 
     public Set<Booth> getBoothsById(int festivalId) {
         return findFestivalById(festivalId).getParticipatingBooths();
@@ -82,5 +80,9 @@ public class FestivalService {
 
     public Festival save(Festival festival) {
         return festivalRepository.save(festival);
+    }
+
+    public List<FestivalLocalityDTO> getFestivalLocality() {
+        return festivalRepository.findAllGroupByLocality();
     }
 }

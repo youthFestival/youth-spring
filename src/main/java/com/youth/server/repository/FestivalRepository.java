@@ -1,6 +1,7 @@
 package com.youth.server.repository;
 
 import com.youth.server.domain.Festival;
+import com.youth.server.dto.FestivalLocalityDTO;
 import com.youth.server.dto.SearchFestivalByFilterDTO;
 import com.youth.server.dto.festival.FestivalRequest;
 import org.springframework.data.domain.PageRequest;
@@ -31,12 +32,14 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
 
     List<Festival> findTop5ByNameIsContaining(String name);
 
+//    @Query("SELECT f FROM Festival f Group By f.locality order by f.viewCount")
+//    List<Festival> findAllGroupByLocality();
 
     Optional<Festival> findById(int id);
 
     @Query("""
         SELECT new com.youth.server.dto.SearchFestivalByFilterDTO(
-           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl), 
+           f.id, f.name, f.startDate, f.endDate, f.locality, MIN(i.imgUrl),
            f.viewCount, f.ticketOpen, COUNT(u.id), 
            COALESCE(f.geolocation.name, '위치 정보가 존재하지 않습니다.'), 
            COALESCE(f.geolocation.detail, '위치 설명이 존재하지 않습니다')
@@ -59,6 +62,6 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
 
 
     // 3개 랜덤 탐색 인기순
-    @Query("SELECT f FROM Festival f ORDER BY f.viewCount DESC")
-    List<Festival> findTop3(PageRequest of);
+    @Query("SELECT new com.youth.server.dto.FestivalLocalityDTO(f.locality, SUM(f.viewCount), COUNT(favoriteUsers)) FROM Festival f LEFT JOIN f.favoriteUsers favoriteUsers GROUP BY f.locality ORDER BY SUM(f.viewCount) DESC")
+    List<FestivalLocalityDTO> findAllGroupByLocality();
 }
