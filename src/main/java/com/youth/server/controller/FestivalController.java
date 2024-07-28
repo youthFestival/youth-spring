@@ -130,6 +130,7 @@ public class FestivalController {
                 .put("tel",festival.getTel())
                 .put("organizerUrl", festival.getOrganizerUrl())
                 .put("geoLocation", festival.getGeolocation())
+                .put("locality", festival.getLocality())
                 .build();
     }
 
