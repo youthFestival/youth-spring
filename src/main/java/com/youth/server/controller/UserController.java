@@ -101,5 +101,23 @@ public class UserController {
                 .build();
     }
 
+    @PutMapping("/password/{email}")
+    public RestEntity changePassword(@PathVariable("email") String email,
+                                     @RequestBody Map<String,String> payload) {
 
+        User user =  userRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("해당 이메일에 존재하지 않는 유저입니다."));
+
+        String newPassword = payload.get("password");
+
+        if(newPassword == null) throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        userRepository.save(user);
+
+        return RestEntity.builder()
+                .status(HttpStatus.OK)
+                .message("비밀번호가 변경되었습니다.")
+                .build();
+    }
 }
