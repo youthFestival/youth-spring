@@ -123,7 +123,7 @@ public class FestivalController {
                 .put("description", festival.getDescription())
                 .put("startDate", festival.getStartDate())
                 .put("endDate", festival.getEndDate())
-                .put("showTime", Duration.between(festival.getStageOpen(),festival.getStageClose()).toHours())
+                .put("showTime", Duration.between(festival.getStageOpen(),festival.getStageClose()).toMinutes()+"분")
                 .put("category", festival.getCategory())
                 .put("organizer", festival.getOrganizer())
                 .put("minAge", festival.getMinAge())
