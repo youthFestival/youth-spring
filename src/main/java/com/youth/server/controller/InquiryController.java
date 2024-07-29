@@ -165,36 +165,39 @@ public class InquiryController {
             status = Inquiry.Status.답변완료;
         }
 
-        Inquiry inquiry = Inquiry.builder()
+        Inquiry.InquiryBuilder inquiry = Inquiry.builder()
                 .title(title)
                 .content(content)
                 .category(category)
-                .status(status)
                 .isSecret(isSecret != null && isSecret.equals("true"))
-                .author(userRepository.findById(uid).orElseThrow(()->new NotFoundException("해당 유저가 존재하지 않습니다.")))
-                .build();
+                .author(userRepository.findById(uid).orElseThrow(()->new NotFoundException("해당 유저가 존재하지 않습니다.")));
+
+        Inquiry newInquiry = null;
 
         // 페스티벌 아이디가 있을 경우
         if(festivalId != null)
         {
-            inquiry.setFestival(festivalRepository.findFestivalById(Integer.valueOf(festivalId)).orElseThrow(
+            inquiry.festival(festivalRepository.findFestivalById(Integer.valueOf(festivalId)).orElseThrow(
                     ()->new NotFoundException("페스티벌이 존재하지 않습니다. 입력 페스티벌 아이디 : "+ festivalId )
             ));
         }
 
 
         // 답변글일 경우
-        if(questionInquiry.getReply() != null) {
-            inquiry.setStatus(Inquiry.Status.답변완료);
-            inquiryRepository.save(inquiry);
+        if(questionInquiry != null){
+            inquiry.status(Inquiry.Status.답변완료);
+
+            newInquiry = inquiry.build();
+            inquiryRepository.save(newInquiry);
+
             questionInquiry.setStatus(Inquiry.Status.답변완료);
-
-            questionInquiry.setReply(inquiry);
-
-            inquiryRepository.save(inquiry);
+            questionInquiry.setReply(newInquiry);
             inquiryRepository.save(questionInquiry);
         }else{
-            inquiryRepository.save(inquiry);
+            inquiry.status(status);
+            newInquiry = inquiry.build();
+            inquiryRepository.save(newInquiry);
+
         }
 
 
