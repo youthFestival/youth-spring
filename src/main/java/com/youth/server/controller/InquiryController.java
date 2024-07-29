@@ -184,12 +184,14 @@ public class InquiryController {
 
 
         // 답변글일 경우
-        if(questionInquiry != null) {
+        if(questionInquiry.getReply() != null) {
             inquiry.setStatus(Inquiry.Status.답변완료);
             inquiryRepository.save(inquiry);
+            questionInquiry.setStatus(Inquiry.Status.답변완료);
 
             questionInquiry.setReply(inquiry);
-            questionInquiry.setStatus(Inquiry.Status.답변완료);
+
+            inquiryRepository.save(inquiry)
             inquiryRepository.save(questionInquiry);
         }else{
             inquiryRepository.save(inquiry);
