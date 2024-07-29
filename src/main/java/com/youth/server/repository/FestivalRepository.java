@@ -49,6 +49,7 @@ public interface FestivalRepository extends JpaRepository<Festival, Integer> {
         LEFT JOIN f.favoriteUsers u 
         LEFT JOIN f.geolocation g
         WHERE
+        i.category = "썸네일" AND
         (:#{#data.search} IS NULL OR f.name LIKE %:#{#data.search}%) AND
         (:#{#data.locality} IS NULL OR f.locality = :#{#data.locality}) AND
         (:#{#data.category} IS NULL OR f.category = :#{#data.getCategory()}) AND
