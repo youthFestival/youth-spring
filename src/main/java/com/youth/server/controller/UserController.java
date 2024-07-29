@@ -3,20 +3,16 @@ package com.youth.server.controller;
 import com.youth.server.domain.User;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.exception.NotFoundException;
-import com.youth.server.exception.PermissionDeniedException;
 import com.youth.server.repository.UserRepository;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -118,6 +114,15 @@ public class UserController {
         return RestEntity.builder()
                 .status(HttpStatus.OK)
                 .message("비밀번호가 변경되었습니다.")
+                .build();
+    }
+
+    @DeleteMapping("{userid}")
+    public RestEntity deleteUserById(@PathVariable(name="userid") String id){
+        return RestEntity.builder()
+                .status(HttpStatus.OK)
+                .put("user", userRepository.deleteUserByUserId(id))
+                .message("삭제되었습니다.")
                 .build();
     }
 }
