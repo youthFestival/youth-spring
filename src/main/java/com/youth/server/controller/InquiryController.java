@@ -191,7 +191,7 @@ public class InquiryController {
 
             questionInquiry.setReply(inquiry);
 
-            inquiryRepository.save(inquiry)
+            inquiryRepository.save(inquiry);
             inquiryRepository.save(questionInquiry);
         }else{
             inquiryRepository.save(inquiry);
