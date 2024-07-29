@@ -119,9 +119,9 @@ public class UserController {
 
     @DeleteMapping("{userid}")
     public RestEntity deleteUserById(@PathVariable(name="userid") String id){
+        userRepository.deleteUserByUserId(id);
         return RestEntity.builder()
                 .status(HttpStatus.OK)
-                .put("user", userRepository.deleteUserByUserId(id))
                 .message("삭제되었습니다.")
                 .build();
     }
