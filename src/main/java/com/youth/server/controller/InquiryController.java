@@ -1,9 +1,7 @@
 package com.youth.server.controller;
 
 
-import com.youth.server.domain.Festival;
 import com.youth.server.domain.Inquiry;
-import com.youth.server.dto.InquiryDTO;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.repository.FestivalRepository;
@@ -11,7 +9,6 @@ import com.youth.server.repository.InquiryRepository;
 import com.youth.server.repository.UserRepository;
 import com.youth.server.util.Const;
 import com.youth.server.util.JwtUtil;
-import com.youth.server.util.ObjectUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -193,6 +189,7 @@ public class InquiryController {
             inquiryRepository.save(inquiry);
 
             questionInquiry.setReply(inquiry);
+            questionInquiry.setStatus(Inquiry.Status.답변완료);
             inquiryRepository.save(questionInquiry);
         }else{
             inquiryRepository.save(inquiry);
