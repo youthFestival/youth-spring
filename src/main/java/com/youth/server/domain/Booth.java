@@ -16,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Booth {
+    public class Booth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
