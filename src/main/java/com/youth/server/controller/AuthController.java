@@ -1,7 +1,6 @@
 package com.youth.server.controller;
 
 import com.youth.server.domain.User;
-//import com.youth.server.dto.EmailVerificationResult;
 import com.youth.server.dto.RestEntity;
 import com.youth.server.dto.UserDTO;
 import com.youth.server.exception.NotFoundException;

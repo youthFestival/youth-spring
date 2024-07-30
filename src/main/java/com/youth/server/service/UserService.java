@@ -2,16 +2,13 @@ package com.youth.server.service;
 
 import com.youth.server.domain.EmailVerificationToken;
 import com.youth.server.domain.User;
-//import com.youth.server.dto.EmailVerificationResult;
 import com.youth.server.exception.BusinessLogicException;
 import com.youth.server.exception.NotFoundException;
 import com.youth.server.repository.EmailVerificationTokenRepository;
 import com.youth.server.repository.UserRepository;
-//import com.youth.server.util.RedisUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
