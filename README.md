@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Kiosk</h1>
+<h1>Youth-Spring</h1>
 <img src="https://github.com/user-attachments/assets/9317c18b-0f4b-49f8-a8f3-8779f5655373" width=300, height=300>
 
 <br>
