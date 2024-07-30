@@ -1,10 +1,10 @@
 <div align="center">
 <h1>Kiosk</h1>
-<img src="https://github.com/user-attachments/assets/9317c18b-0f4b-49f8-a8f3-8779f5655373" width=500, height=500>
+<img src="https://github.com/user-attachments/assets/9317c18b-0f4b-49f8-a8f3-8779f5655373" width=300, height=300>
 
 <br>
  2024. 06.  24 ~ 2024. 07.30 <br>
-Youth-React Repository에 RestServer 입니다. 
+Youth-React Repository에 RestAPI 서버 입니다. 
 
 <br>
 <br>
@@ -18,7 +18,8 @@ Youth-React Repository에 RestServer 입니다.
 | IDE | intellij IDEA 2023.3.05 |
 | Language | Java |
 | java Version | 17 |
-
+| Framework | Spring boot 3.3.1 |
+| Library | Spring Boot DevTools <br> Spring Web <br> Spring Security <br> Spring Data JPA <br> MySQL Driver <br> Spring Boot Actuator <br> Spring Configuation <br> Lombok <br> Spring Boot Starter Mail 3.0.5 <br> Spring-Boot-Starter-data-Radius <br> jsonwebtoke jjwt 0.12.6  <br> |
 # **Features**
 * Spring Security를 통한 인증 관리
 * RestController를 통한 유저 처리
